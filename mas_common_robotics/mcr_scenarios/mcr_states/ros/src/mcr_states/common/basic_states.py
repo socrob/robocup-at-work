@@ -5,7 +5,7 @@ import smach
 import smach_ros
 import std_msgs.msg
 import copy
-
+import time
 
 class loop_for(smach.State):
     '''
@@ -20,7 +20,7 @@ class loop_for(smach.State):
 
     def execute(self, foo):
         if self.loop_count < self.max_loop_count:
-            rospy.sleep(self.sleep_time)
+            time.sleep(self.sleep_time)
             rospy.loginfo('run number: %d' % self.loop_count)
             self.loop_count = self.loop_count + 1
             return 'loop'
@@ -145,9 +145,10 @@ class send_and_wait_events_combined(smach.State):
     def wait_for_events(self, userdata):
         start_time = rospy.Time.now()
         temp_events = copy.copy(self.event_out_subscribers_list_)
-
-        while(rospy.Time.now() - start_time < self.timeout):
-
+        
+        current_time = rospy.Time(time.time())
+        target_time = rospy.Time(current_time.to_time() + rospy.Time(self.timeout.secs).to_time())
+        while (current_time < target_time):
             num_pos_events = 0
             for event in temp_events:
                 if event.get_event_behavior():
@@ -173,8 +174,9 @@ class send_and_wait_events_combined(smach.State):
 
                     temp_events.remove(event)
 
-            rospy.sleep(0.01)
-
+            time.sleep(0.01)
+            current_time = rospy.Time(time.time())
+        
         return 'timeout'
 
     def reset_wait_events(self):
@@ -219,7 +221,7 @@ class send_event(smach.State):
             event_name = event[0]
             self.event_names_.append(event_name)
             self.expected_return_values_.append(event[1].lower())
-            self.event_publisher_list.append(rospy.Publisher(event_name, std_msgs.msg.String))
+            self.event_publisher_list.append(rospy.Publisher(event_name, std_msgs.msg.String, queue_size=1))
 
     def execute(self, userdata):
         for index in range(len(self.event_publisher_list)):
@@ -331,15 +333,17 @@ class wait_for_events(smach.State):
 
         start_time = rospy.Time.now()
         temp_events = copy.copy(self.events_)
-
-        while(rospy.Time.now() - start_time < self.timeout):
+        
+        current_time = rospy.Time(time.time())
+        target_time = rospy.Time(current_time.to_time() + rospy.Time(self.timeout.secs).to_time())
+        while (current_time < target_time):
             num_pos_events = 0
             for event in temp_events:
                 if event.get_event_behavior():
                     num_pos_events += 1
             if num_pos_events == 0:
                 return 'success'
-
+            
             for event in temp_events:
                 result = event.getResult().lower()
                 event_behavior = event.get_event_behavior()
@@ -354,9 +358,10 @@ class wait_for_events(smach.State):
                         rospy.loginfo("Received event {0}:{1}".format(event.get_event_name(), event.get_latest_event()))
 
                     temp_events.remove(event)
-
-            rospy.sleep(0.01)
-
+            
+            time.sleep(0.01)
+            current_time = rospy.Time(time.time())
+        
         return 'timeout'
 
 
@@ -365,8 +370,8 @@ class set_named_config(smach.State):
         smach.State.__init__(self, outcomes=['success', 'failure', 'timeout'])
         self.named_config = named_config
         self.config_name_pub = rospy.Publisher("/mcr_common/dynamic_reconfigure_client/configuration_name",
-                                               std_msgs.msg.String)
-        self.event_in_pub = rospy.Publisher("/mcr_common/dynamic_reconfigure_client/event_in", std_msgs.msg.String)
+                                               std_msgs.msg.String, queue_size=1)
+        self.event_in_pub = rospy.Publisher("/mcr_common/dynamic_reconfigure_client/event_in", std_msgs.msg.String, queue_size=1)
         self.event_out_sub = rospy.Subscriber("/mcr_common/dynamic_reconfigure_client/event_out",
                                               std_msgs.msg.String, self.event_cb)
         self.event = None
