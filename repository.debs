@@ -1,0 +1,4 @@
+#!/bin/bash
+./mas_industrial_robotics/repository.debs
+./mas_common_robotics/repository.debs
+./mas_third_party_software/repository.debs
