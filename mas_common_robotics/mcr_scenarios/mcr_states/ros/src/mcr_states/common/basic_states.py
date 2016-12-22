@@ -331,7 +331,6 @@ class wait_for_events(smach.State):
 
     def execute(self, userdata):
 
-        start_time = rospy.Time.now()
         temp_events = copy.copy(self.events_)
         
         current_time = rospy.Time(time.time())
@@ -358,8 +357,6 @@ class wait_for_events(smach.State):
                         rospy.loginfo("Received event {0}:{1}".format(event.get_event_name(), event.get_latest_event()))
 
                     temp_events.remove(event)
-            
-            time.sleep(0.01)
             current_time = rospy.Time(time.time())
         
         return 'timeout'
