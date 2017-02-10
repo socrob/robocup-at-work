@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import rospy
 from smach import State
 
 
@@ -24,3 +25,9 @@ class ConfirmState(State):
                 return 'yes'
             if ans == 'n' or ans == 'N':
                 return 'no'
+
+class ConfirmStateObject(ConfirmState):
+    def execute(self, userdata):
+        ret = ConfirmState.execute(self, userdata)
+        rospy.set_param('save_pcl', ret)
+        return ret
