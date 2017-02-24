@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import rospy
 from smach import State
 
 
@@ -16,3 +17,12 @@ class CounterState(State):
             return 'overflow'
         else:
             return 'counting'
+
+class CounterStateObject(CounterState):
+	def execute(self, userdata):
+		ret = CounterState.execute(self, userdata)
+		save_pcl = rospy.get_param('save_pcl')
+		if save_pcl == 'no':
+			self.counter = 0
+			return 'overflow'
+		return ret

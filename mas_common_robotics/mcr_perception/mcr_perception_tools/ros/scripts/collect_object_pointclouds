@@ -11,9 +11,8 @@ import roslib
 
 # Import helper states for user input and counting
 sys.path.append(join(roslib.packages.get_pkg_dir('mcr_object_recognition_bounding_box'), 'common', 'src'))
-from mcr_object_recognition_bounding_box.counter_state import CounterState
-from mcr_object_recognition_bounding_box.confirm_state import ConfirmState
-from mcr_object_recognition_bounding_box.counter_state import CounterState
+from mcr_object_recognition_bounding_box.counter_state import CounterState, CounterStateObject
+from mcr_object_recognition_bounding_box.confirm_state import ConfirmState, ConfirmStateObject
 
 # Import states for calling services from mcr_scene_segmentation
 sys.path.append(join(roslib.packages.get_pkg_dir('mcr_object_detection'),
@@ -88,6 +87,9 @@ class SetPolygonTimestamp(State):
 
 if __name__ == '__main__':
     rospy.init_node(NODE)
+
+    rospy.set_param('save_pcl', 'no')
+
     parser = argparse.ArgumentParser(description='''
     Collect segmented pointclouds for objects.
     ''')
@@ -135,11 +137,11 @@ if __name__ == '__main__':
                                       'false': 'SET_POLYGON_TIMESTAMP'})
 
         StateMachine.add('COUNTER',
-                         CounterState(int(args.confirm_every)),
+                         CounterStateObject(int(args.confirm_every)),
                          transitions={'overflow': 'CONFIRM_OBJECT',
                                       'counting': 'SAVE_CLUSTER'})
         StateMachine.add('CONFIRM_OBJECT',
-                         ConfirmState('Is the detected object correct?'),
+                         ConfirmStateObject('Is the detected object correct?'),
                          transitions={'yes': 'SAVE_CLUSTER',
                                       'no': 'SET_POLYGON_TIMESTAMP'})
         StateMachine.add('SAVE_CLUSTER',
