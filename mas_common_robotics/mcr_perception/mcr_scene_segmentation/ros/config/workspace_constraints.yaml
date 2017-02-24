@@ -7,8 +7,8 @@ transform:
 voxel_filter:
     leaf_size: 0.02
     filter_field_name: z
-    filter_limit_min: -0.15
-    filter_limit_max: 0.2
+    filter_limit_min: 0.2 # filter out the floor if you don't need to recognize objects from the floor
+    filter_limit_max: 1.2 # height of the object
 passthrough_x:
     filter_field_name: x
     filter_limit_min: 0.0
@@ -18,7 +18,7 @@ normal_estimation:
     radius_search: 0.03
     spatial_locator: 0
 planar_segmentation:
-    model_type: 16
+    model_type: 16        # try 11 if not working
     distance_threshold: 0.01
     max_iterations: 1000
     method_type: 0
