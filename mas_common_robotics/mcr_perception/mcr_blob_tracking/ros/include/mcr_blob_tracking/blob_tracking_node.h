@@ -61,10 +61,10 @@ private:
     bool debug_mode_;
     bool start_blob_tracking_;
     bool first_pass_;
-    string tracking_type_;
+    std::string tracking_type_;
     double blob_distance_threshold_;
     int blob_tracked_index_;
-    vector<vector<double> > blobs_;
+    std::vector<std::vector<double> > blobs_;
     mcr_perception_msgs::BlobList blob_list_;
     geometry_msgs::Pose2D blob_tracked_pose_;
     std_msgs::String event_out_msg_;

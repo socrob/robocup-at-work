@@ -213,7 +213,7 @@ void BlobTrackingNode::trackFirstLargesBlob()
 
     }
 
-    vector<double> distance_to_tracked_blob;
+    std::vector<double> distance_to_tracked_blob;
     distance_to_tracked_blob.resize(blobs_.size());
 
     for (int i = 0; i < blobs_.size(); i++)
