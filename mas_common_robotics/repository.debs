@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# your ROS distribution
+DISTRO=kinetic
+
 # create list of packages to install
 packagelist=(
   liblog4cpp5-dev
@@ -10,37 +13,37 @@ packagelist=(
   python-setuptools
   python-sklearn
   python-vcstools
-  ros-indigo-angles
-  ros-indigo-bfl
-  ros-indigo-brics-actuator
-  ros-indigo-diagnostic-aggregator
-  ros-indigo-diagnostic-analysis
-  ros-indigo-diagnostic-msgs
-  ros-indigo-dynamic-reconfigure
-  ros-indigo-global-planner
-  ros-indigo-image-transport
-  ros-indigo-joint-trajectory-controller
-  ros-indigo-kdl-parser
-  ros-indigo-laser-filters
-  ros-indigo-moveit-core
-  ros-indigo-moveit-msgs
-  ros-indigo-moveit-ros-planning
-  ros-indigo-nav-msgs
-  ros-indigo-pcl-ros
-  ros-indigo-robot-state-publisher
-  ros-indigo-ros
-  ros-indigo-ros-control
-  ros-indigo-roscpp
-  ros-indigo-roslint
-  ros-indigo-rviz
-  ros-indigo-srdfdom
-  ros-indigo-std-srvs
-  ros-indigo-tf
-  ros-indigo-tf-conversions
-  ros-indigo-trajectory-msgs
-  ros-indigo-urdf
-  ros-indigo-vision-opencv
-  ros-indigo-visualization-msgs
+  ros-${DISTRO}-angles
+  ros-${DISTRO}-bfl
+#  ros-${DISTRO}-brics-actuator
+  ros-${DISTRO}-diagnostic-aggregator
+  ros-${DISTRO}-diagnostic-analysis
+  ros-${DISTRO}-diagnostic-msgs
+  ros-${DISTRO}-dynamic-reconfigure
+  ros-${DISTRO}-global-planner
+  ros-${DISTRO}-image-transport
+  ros-${DISTRO}-joint-trajectory-controller
+  ros-${DISTRO}-kdl-parser
+  ros-${DISTRO}-laser-filters
+  ros-${DISTRO}-moveit-core
+  ros-${DISTRO}-moveit-msgs
+  ros-${DISTRO}-moveit-ros-planning
+  ros-${DISTRO}-nav-msgs
+  ros-${DISTRO}-pcl-ros
+  ros-${DISTRO}-robot-state-publisher
+  ros-${DISTRO}-ros
+  ros-${DISTRO}-ros-control
+  ros-${DISTRO}-roscpp
+  ros-${DISTRO}-roslint
+  ros-${DISTRO}-rviz
+  ros-${DISTRO}-srdfdom
+  ros-${DISTRO}-std-srvs
+  ros-${DISTRO}-tf
+  ros-${DISTRO}-tf-conversions
+  ros-${DISTRO}-trajectory-msgs
+  ros-${DISTRO}-urdf
+  ros-${DISTRO}-vision-opencv
+  ros-${DISTRO}-visualization-msgs
 )
 
 ### Install debian packages listed in array above

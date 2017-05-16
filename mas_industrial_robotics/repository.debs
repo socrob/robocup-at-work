@@ -5,6 +5,9 @@ else
     INSTALL_PACKAGES=$1
 fi
 
+# your ROS distribution
+DISTRO=kinetic
+
 # create list of packages to install
 packagelist=(
     libcap2-bin
@@ -15,44 +18,39 @@ packagelist=(
     python-rosinstall
     python-setuptools
     python-zmq
-    ros-indigo-amcl
-    ros-indigo-clear-costmap-recovery
-    ros-indigo-cob-scan-unifier
-    ros-indigo-cob-srvs
-    ros-indigo-dwa-local-planner
-    ros-indigo-dynamixel-controllers
-    ros-indigo-dynamixel-msgs
-    ros-indigo-eband-local-planner
-    ros-indigo-gazebo-ros-control
-    ros-indigo-gazebo-plugins
-    ros-indigo-gmapping
-    ros-indigo-hokuyo-node
-    ros-indigo-joint-state-controller
-    ros-indigo-joy
-    ros-indigo-map-server
-    ros-indigo-move-base
-    ros-indigo-moveit-core
-    ros-indigo-moveit-commander
-    ros-indigo-moveit-msgs
-    ros-indigo-moveit-planners
-    ros-indigo-moveit-ros-move-group
-    ros-indigo-moveit-setup-assistant
-    ros-indigo-moveit-simple-controller-manager
-    ros-indigo-openni-launch
-    ros-indigo-openni2-launch
-    ros-indigo-pr2-dashboard-aggregator
-    ros-indigo-pr2-description
-    ros-indigo-pr2-msgs
-    ros-indigo-ros
-    ros-indigo-ros-controllers
-    ros-indigo-roslint
-    ros-indigo-rqt-robot-dashboard
-    ros-indigo-serial
-    ros-indigo-smach
-    ros-indigo-srdfdom
-    ros-indigo-twist-mux
-    ros-indigo-usb-cam
-    ros-indigo-global-planner
+    ros-${DISTRO}-amcl
+    ros-${DISTRO}-clear-costmap-recovery
+    ros-${DISTRO}-dwa-local-planner
+    ros-${DISTRO}-dynamixel-controllers
+    ros-${DISTRO}-dynamixel-msgs
+    ros-${DISTRO}-gazebo-ros-control
+    ros-${DISTRO}-gazebo-plugins
+    ros-${DISTRO}-gmapping
+    ros-${DISTRO}-joint-state-controller
+    ros-${DISTRO}-joy
+    ros-${DISTRO}-map-server
+    ros-${DISTRO}-move-base
+    ros-${DISTRO}-moveit-core
+    ros-${DISTRO}-moveit-commander
+    ros-${DISTRO}-moveit-msgs
+    ros-${DISTRO}-moveit-planners
+    ros-${DISTRO}-moveit-ros-move-group
+    ros-${DISTRO}-moveit-setup-assistant
+    ros-${DISTRO}-moveit-simple-controller-manager
+    ros-${DISTRO}-openni-launch
+    ros-${DISTRO}-openni2-launch
+    ros-${DISTRO}-pr2-dashboard-aggregator
+    ros-${DISTRO}-pr2-description
+    ros-${DISTRO}-pr2-msgs
+    ros-${DISTRO}-ros
+    ros-${DISTRO}-ros-controllers
+    ros-${DISTRO}-roslint
+    ros-${DISTRO}-rqt-robot-dashboard
+    ros-${DISTRO}-serial
+    ros-${DISTRO}-smach
+    ros-${DISTRO}-srdfdom
+    ros-${DISTRO}-twist-mux
+    ros-${DISTRO}-global-planner
 )
 
 ### install debian packages listed in array above

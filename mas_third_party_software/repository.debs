@@ -5,6 +5,9 @@ else
     INSTALL_PACKAGES=$1
 fi
 
+# your ROS distribution
+DISTRO=kinetic
+
 # create list of packages to install
 packagelist=(
   bison
@@ -14,8 +17,8 @@ packagelist=(
   pypy
   python-catkin-lint
   python-rosinstall
-  ros-indigo-ros
-  ros-indigo-vision-opencv
+  ros-${DISTRO}-ros
+  ros-${DISTRO}-vision-opencv
   unzip
 )
 
