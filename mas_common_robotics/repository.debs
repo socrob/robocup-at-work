@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ $# == 0 ]; then
+    INSTALL_PACKAGES=true
+else
+    INSTALL_PACKAGES=$1
+fi
 
 # your ROS distribution
 DISTRO=kinetic
@@ -15,7 +20,6 @@ packagelist=(
   python-vcstools
   ros-${DISTRO}-angles
   ros-${DISTRO}-bfl
-#  ros-${DISTRO}-brics-actuator
   ros-${DISTRO}-diagnostic-aggregator
   ros-${DISTRO}-diagnostic-analysis
   ros-${DISTRO}-diagnostic-msgs
@@ -47,4 +51,19 @@ packagelist=(
 )
 
 ### Install debian packages listed in array above
-sudo apt-get install -y ${packagelist[@]}
+if [ $INSTALL_PACKAGES != false ]; then
+    sudo apt-get install -y ${packagelist[@]}
+fi
+
+### install further repositories if repository.rosinstall file exists
+if [ -f "./repository.rosinstall" ]; then
+    rosinstall .. /opt/ros/${DISTRO} repository.rosinstall
+
+    ### install dependencies of the previously cloned repositories
+    dependent_repositories=$(grep -r "local-name:" repository.rosinstall  | cut -d":" -f 2 | sed -r 's/\s+//g')
+    for i in $dependent_repositories
+    do
+        cd ../$i
+        if [ -f repository.debs ]; then ./repository.debs $INSTALL_PACKAGES ; fi
+    done
+fi
