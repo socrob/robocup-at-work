@@ -67,25 +67,39 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
             <= (standing_angle + angular_tolerance):
         standing = True
 
-    if standing:
-        if pose_in.pose.position.z < height_threshold:
-            # The object is re-oriented to be laying horizontally,
-            # but maintaining its rotation
-            new_orientation = transformations.quaternion_from_euler(
-                roll, pitch - (math.pi / 2), yaw
-            )
-            pose_out.pose.orientation.x = new_orientation[0]
-            pose_out.pose.orientation.y = new_orientation[1]
-            pose_out.pose.orientation.z = new_orientation[2]
-            pose_out.pose.orientation.w = new_orientation[3]
-            standing = False
-        else:
-            # Retain standing orientation, but with no rotation around the X axis
-            pose_out.pose.orientation.x = 0.0
-            pose_out.pose.orientation.y = math.cos(math.pi / 4)
-            pose_out.pose.orientation.z = 0.0
-            pose_out.pose.orientation.w = -math.cos(math.pi / 4)
+    # if standing:
+    #     if pose_in.pose.position.z < height_threshold:
+    #         # The object is re-oriented to be laying horizontally,
+    #         # but maintaining its rotation
+    #         new_orientation = transformations.quaternion_from_euler(
+    #             roll, pitch - (math.pi / 2), yaw
+    #         )
+    #         pose_out.pose.orientation.x = new_orientation[0]
+    #         pose_out.pose.orientation.y = new_orientation[1]
+    #         pose_out.pose.orientation.z = new_orientation[2]
+    #         pose_out.pose.orientation.w = new_orientation[3]
+    #         standing = False
+    #     else:
+    #         # Retain standing orientation, but with no rotation around the X axis
+    #         pose_out.pose.orientation.x = 0.0
+    #         pose_out.pose.orientation.y = math.cos(math.pi / 4)
+    #         pose_out.pose.orientation.z = 0.0
+    #         pose_out.pose.orientation.w = -math.cos(math.pi / 4)
 
+    #hardcoded way - always same position while standing
+    #if standing:
+        #pose_out.pose.orientation.x = -0.51
+        #pose_out.pose.orientation.y = -0.5
+        #pose_out.pose.orientation.z = -0.5
+        #pose_out.pose.orientation.w = 0.5
+        pose_out.pose.orientation.x = 0.5
+        pose_out.pose.orientation.y = 0.5
+        pose_out.pose.orientation.z = -0.5
+        pose_out.pose.orientation.w = 0.5
+        #pose_out.pose.orientation.x = 0.707
+        #pose_out.pose.orientation.y = 0.707
+        #pose_out.pose.orientation.z = 0.0
+        #pose_out.pose.orientation.w = 0.0
     return pose_out, standing
 
 
@@ -149,11 +163,22 @@ def modify_pose_rotation(pose, offset=0.0, reference_axis='z', rotation_range=No
         angles_out[0], angles_out[1], angles_out[2]
     )
 
-    pose_out.pose.orientation.x = orientation_out[0]
-    pose_out.pose.orientation.y = orientation_out[1]
-    pose_out.pose.orientation.z = orientation_out[2]
-    pose_out.pose.orientation.w = orientation_out[3]
+    #pose_out.pose.orientation.x = orientation_out[0]
+    #pose_out.pose.orientation.y = orientation_out[1]
+    #pose_out.pose.orientation.z = orientation_out[2]
+    #pose_out.pose.orientation.w = orientation_out[3]
 
+    #hardcoded way - always same position while lying down
+
+    # pose_out.pose.orientation.x = -0.71
+    # pose_out.pose.orientation.y = -0.7
+    # pose_out.pose.orientation.z = 0.0
+    # pose_out.pose.orientation.w = 0.0
+
+    pose_out.pose.orientation.x = -0.67559
+    pose_out.pose.orientation.y = -0.7372
+    pose_out.pose.orientation.z = 0.0
+    pose_out.pose.orientation.w = 0.0
     return pose_out
 
 
