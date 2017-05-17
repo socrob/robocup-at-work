@@ -11,6 +11,7 @@ DISTRO=kinetic
 # create list of packages to install
 packagelist=(
   liblog4cpp5-dev
+  libopencv-dev
   libsvm-dev
   python-catkin-lint
   python-rosinstall
