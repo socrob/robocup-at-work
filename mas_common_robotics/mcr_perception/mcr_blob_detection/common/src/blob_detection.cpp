@@ -11,7 +11,7 @@ BlobDetection::~BlobDetection()
 
 }
 
-int BlobDetection::detectBlobs(const Mat &mat_input_image, Mat &debug_image, vector<vector<double> > &blobs)
+int BlobDetection::detectBlobs(const Mat &mat_input_image, Mat &debug_image, std::vector<std::vector<double> > &blobs)
 {
     double pose_x = 0.0;
     double pose_y = 0.0;
@@ -40,8 +40,8 @@ int BlobDetection::detectBlobs(const Mat &mat_input_image, Mat &debug_image, vec
 
     erode(gray_dilate, gray_dilate, kernel);
 
-    vector<vector<Point> > contours;
-    vector<Vec4i> hierarchy;
+    std::vector<std::vector<Point> > contours;
+    std::vector<Vec4i> hierarchy;
     findContours(gray_dilate, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
     // Draw contours

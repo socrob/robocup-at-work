@@ -55,7 +55,7 @@ private:
     bool start_blob_detection_;
     BlobDetection bd_;
     int blob_detection_status_ ;
-    std::vector<vector<double> > blobs_;
+    std::vector<std::vector<double> > blobs_;
     mcr_perception_msgs::BlobList blob_list_;
     mcr_perception_msgs::Blob blob_;
     std_msgs::String event_out_msg_;

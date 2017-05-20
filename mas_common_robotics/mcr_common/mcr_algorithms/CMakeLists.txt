@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(mcr_algorithms)
 find_package(catkin REQUIRED COMPONENTS geometry_msgs sensor_msgs mcr_perception_msgs)
 find_package(PCL 1.6 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS serialization)
 
 catkin_python_setup()

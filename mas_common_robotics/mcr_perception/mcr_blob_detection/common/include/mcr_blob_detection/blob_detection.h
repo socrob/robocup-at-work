@@ -4,7 +4,7 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv2/opencv.hpp>
-#include <cvblobs/BlobResult.h>
+#include <cvblobs8.3_linux/BlobResult.h>
 
 using namespace cv;
 
@@ -13,7 +13,7 @@ class BlobDetection
 public:
     BlobDetection();
     virtual ~BlobDetection();
-    int detectBlobs(const Mat &mat_input_image, Mat &debug_image, vector<vector<double> > &blobs);
+    int detectBlobs(const Mat &mat_input_image, Mat &debug_image, std::vector<std::vector<double> > &blobs);
     void updateDynamicVariables(bool debug_mode, int min_blob_area, int max_blob_area);
 
 private:

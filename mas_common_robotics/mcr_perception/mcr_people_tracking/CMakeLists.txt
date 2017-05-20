@@ -13,7 +13,7 @@ find_package(catkin REQUIRED
 )
 
 find_package(PCL 1.5 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 2 REQUIRED)
 
 
 generate_dynamic_reconfigure_options(

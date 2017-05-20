@@ -12,7 +12,7 @@ find_package(catkin REQUIRED
     visualization_msgs
 )
 find_package(PCL 1.5 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 2 REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(Boost REQUIRED
   COMPONENTS
@@ -21,6 +21,7 @@ find_package(Boost REQUIRED
     thread
     wserialization
 )
+
 find_library(LOG4CPP_LIBRARY log4cpp)
 
 catkin_package(

@@ -26,6 +26,7 @@ add_custom_target(
 )
 
 catkin_package(
+    INCLUDE_DIRS build
     LIBRARIES blob
 )
 

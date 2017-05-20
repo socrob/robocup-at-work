@@ -1,20 +1,17 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(mcr_blob_detection)
 
-find_package(catkin REQUIRED
-  COMPONENTS
-  	cv_bridge
-	cvblobs
-	dynamic_reconfigure
-	geometry_msgs
-	image_transport
-	roscpp
-	sensor_msgs
-	std_msgs
-	mcr_perception_msgs
+find_package(catkin REQUIRED COMPONENTS
+    cv_bridge
+    dynamic_reconfigure
+    geometry_msgs
+    image_transport
+    roscpp
+    sensor_msgs
+    std_msgs
+    mcr_perception_msgs
+    cvblobs
 )
-
-find_package(OpenCV 2.3 REQUIRED)
 
 generate_dynamic_reconfigure_options(
   ros/config/BlobDetection.cfg
@@ -34,15 +31,12 @@ catkin_package(
     std_msgs
     mcr_perception_msgs
     cvblobs
-  DEPENDS
-    OpenCV
 )
 
 include_directories(
   ros/include
   common/include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(blob_detection_node
@@ -57,7 +51,6 @@ add_dependencies(blob_detection_node
 
 target_link_libraries(blob_detection_node
    ${catkin_LIBRARIES}
-   ${OpenCV_LIBRARIES}
 )
 
 ### TESTS

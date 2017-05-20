@@ -47,6 +47,7 @@ packagelist=(
   ros-${DISTRO}-tf-conversions
   ros-${DISTRO}-trajectory-msgs
   ros-${DISTRO}-urdf
+  ros-${DISTRO}-video-stream-opencv
   ros-${DISTRO}-vision-opencv
   ros-${DISTRO}-visualization-msgs
 )

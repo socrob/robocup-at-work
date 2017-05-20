@@ -2,7 +2,7 @@
 
 BackgroundChangeDetection::BackgroundChangeDetection()
 {
-
+    bsmog_ = cv::createBackgroundSubtractorMOG2();
 }
 
 BackgroundChangeDetection::~BackgroundChangeDetection()
@@ -18,7 +18,7 @@ bool BackgroundChangeDetection::detectBackgroundChange(const cv::Mat &current_fr
     float range[] = {0, 256};
     const float *ranges[] = {range};
 
-    bsmog_.operator()(current_frame, fgMaskMOG, background_learning_rate_);
+    bsmog_->apply(current_frame, fgMaskMOG, background_learning_rate_);
 
     if (is_debug_mode_)
     {
@@ -34,11 +34,6 @@ bool BackgroundChangeDetection::detectBackgroundChange(const cv::Mat &current_fr
     {
         return false;
     }
-}
-
-void BackgroundChangeDetection::initializeBackgroundModel(const cv::Mat &current_frame)
-{
-    bsmog_.initialize(current_frame.size(), current_frame.type());
 }
 
 void BackgroundChangeDetection::updateDynamicVariables(bool debug_mode, double background_change_threshold, double background_learning_rate)

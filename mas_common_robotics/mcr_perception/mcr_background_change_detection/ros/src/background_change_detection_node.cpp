@@ -127,7 +127,6 @@ bool BackgroundChangeDetectionNode::detectBackgroundChange()
         cv::Mat current_frame = cv_img_tmp->image;
         if (is_first_pass_)
         {
-            bcd_.initializeBackgroundModel(current_frame);
             is_first_pass_ = false;
         }
         if (bcd_.detectBackgroundChange(current_frame, debug_image_))
