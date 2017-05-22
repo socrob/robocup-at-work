@@ -25,6 +25,8 @@ add_custom_target(
   COMMAND cmake -E copy_if_different ${PROJECT_SOURCE_DIR}/build/cvblobs8.3_linux/ComponentLabeling.h ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}/${PROJECT_NAME}/ComponentLabeling.h
 )
 
+file(MAKE_DIRECTORY build)
+
 catkin_package(
     INCLUDE_DIRS build
     LIBRARIES blob
