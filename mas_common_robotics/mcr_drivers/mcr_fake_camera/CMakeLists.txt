@@ -7,7 +7,7 @@ find_package(catkin REQUIRED
     image_transport
     roscpp
 )
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 
 include_directories(
   ${catkin_INCLUDE_DIRS}

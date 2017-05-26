@@ -1,9 +1,12 @@
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
-#include <opencv/cvwimage.h>
-#include <opencv/highgui.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <ros/ros.h>
 
+using namespace cv;
 
 int main(int argc, char** argv)
 {
@@ -13,18 +16,25 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "mcr_fake_camera");
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
-    image_transport::Publisher pub = it.advertise("/stereo/left/image_mono", 1);
+    image_transport::Publisher pub_gray = it.advertise("/stereo/left/image_mono", 1);
+    image_transport::Publisher pub_color = it.advertise("/stereo/left/image_color", 1);
 
-    cv::WImageBuffer1_b image(cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE));
+    cv::Mat image_gray = cv::imread(argv[1], IMREAD_GRAYSCALE);
+    cv::Mat image_color = cv::imread(argv[1], IMREAD_COLOR);
 
-    cv_bridge::CvImage out_msg;
-    out_msg.image = image.Ipl();
+    cv_bridge::CvImage out_msg_gray, out_msg_color;
+
+    out_msg_gray.image = image_gray;
+    out_msg_gray.encoding = "mono8";
+    out_msg_color.image = image_color;
+    out_msg_color.encoding ="bgr8";
 
     ros::Rate loop_rate(10);
     while (nh.ok())
     {
-        out_msg.header.stamp = ros::Time::now();
-        pub.publish(out_msg.toImageMsg());
+        out_msg_gray.header.stamp = ros::Time::now();
+        pub_gray.publish(out_msg_gray.toImageMsg());
+        pub_color.publish(out_msg_color.toImageMsg());
         ros::spinOnce();
         loop_rate.sleep();
     }
