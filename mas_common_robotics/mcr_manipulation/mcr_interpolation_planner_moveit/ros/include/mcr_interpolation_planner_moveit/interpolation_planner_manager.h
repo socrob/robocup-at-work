@@ -23,7 +23,7 @@
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <string>
 #include <vector>
-
+#include <boost/scoped_ptr.hpp>
 
 /**
  * @brief The interpolation based planner manager.
