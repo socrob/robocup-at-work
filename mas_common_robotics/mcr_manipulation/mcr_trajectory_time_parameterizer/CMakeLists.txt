@@ -26,6 +26,8 @@ catkin_package(
     moveit_ros_planning
 )
 
+add_definitions(-std=c++11)
+
 include_directories(
   ros/include
   ${catkin_INCLUDE_DIRS}
