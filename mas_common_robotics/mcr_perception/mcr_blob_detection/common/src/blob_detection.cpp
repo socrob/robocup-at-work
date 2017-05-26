@@ -96,7 +96,7 @@ int BlobDetection::detectBlobs(const Mat &mat_input_image, Mat &debug_image, std
             if (debug_mode_)
             {
                 temp_blob.FillBlob(blob_image_, CV_RGB(0, 255, 0));
-                Mat mat_img(blob_image_);
+                Mat mat_img = cvarrToMat(blob_image_);
                 mat_img.copyTo(debug_image);
             }
         }

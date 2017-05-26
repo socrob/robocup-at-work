@@ -1,8 +1,8 @@
 #ifndef BLOBDETECTION_H_
 #define BLOBDETECTION_H_
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 #include <cvblobs8.3_linux/BlobResult.h>
 
