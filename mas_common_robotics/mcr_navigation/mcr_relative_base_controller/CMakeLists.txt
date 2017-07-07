@@ -70,4 +70,4 @@ target_link_libraries(relative_base_controller_test
   ${catkin_LIBRARIES}
 )
 
-add_rostest(ros/test/relative_base_controller.test)
+#add_rostest(ros/test/relative_base_controller.test)
