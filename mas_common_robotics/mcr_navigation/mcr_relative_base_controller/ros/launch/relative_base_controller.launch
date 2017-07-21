@@ -6,12 +6,15 @@
   <arg name="odom_topic" default="/odom" />
   <arg name="world_frame_tf" default="/odom" />
   <arg name="base_frame_tf" default="/base_link" />
+  <arg name="cmd_vel_topic" default="/cmd_vel_prio_low" />
 
   <!-- relative base controller inputs a twist and a trigger and moves
   the robot base locally based on the twist value (i.e. 0.5 m forward) -->
   <node pkg="mcr_relative_base_controller" type="relative_base_controller_node"
         name="relative_base_controller" ns="mcr_navigation" output="screen">
     <remap from="/odom" to="$(arg odom_topic)"/>
+    <remap from="/cmd_vel" to="$(arg cmd_vel_topic)"/>
+
     <param name="world_frame_tf" type="string" value="$(arg world_frame_tf)" />
     <param name="base_frame_tf" type="string" value="$(arg base_frame_tf)" />
   </node>
