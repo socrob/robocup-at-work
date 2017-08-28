@@ -1,2 +1,7 @@
 /tf
-/arm_cam3d/rgb/image_raw
+/scan_combined
+/scan_front
+/scan_rear
+/odom
+/amcl_pose
+/map

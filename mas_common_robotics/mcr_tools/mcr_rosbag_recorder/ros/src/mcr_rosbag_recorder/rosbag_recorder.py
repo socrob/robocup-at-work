@@ -109,7 +109,7 @@ class RosbagRecorder(object):
         subfilename = '{:04d}'.format(today.year) + '_' + '{:02d}'.format(today.month) + \
                       '_' + '{:02d}'.format(today.day) + '_' + '{:02d}'.format(today.hour) + \
                       '-' + '{:02d}'.format(today.minute)
-        filename = self.file_prefix + '_' + subfilename + '.bag'
+        filename = self.file_prefix + '_' + subfilename + '_SocRob' + '.bag'
         if not os.path.isdir(os.path.expanduser(self.file_path)):
             os.mkdir(os.path.expanduser(self.file_path))
         fullpath = os.path.expanduser(os.path.join(self.file_path, filename))
