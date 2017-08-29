@@ -221,6 +221,9 @@ class send_event(smach.State):
             self.expected_return_values_.append(event[1].lower())
             self.event_publisher_list.append(rospy.Publisher(event_name, std_msgs.msg.String, queue_size=1))
 
+        # give some time for the publishers to register in the network
+        rospy.sleep(0.1)
+
     def execute(self, userdata):
         for index in range(len(self.event_publisher_list)):
             self.event_publisher_list[index].publish(self.expected_return_values_[index])
@@ -371,6 +374,8 @@ class set_named_config(smach.State):
         self.event_out_sub = rospy.Subscriber("/mcr_common/dynamic_reconfigure_client/event_out",
                                               std_msgs.msg.String, self.event_cb)
         self.event = None
+        # give some time for publishers to register in the network, (specially needed if this function is the first state)
+        rospy.sleep(0.1)
 
     def event_cb(self, msg):
         self.event = msg.data
