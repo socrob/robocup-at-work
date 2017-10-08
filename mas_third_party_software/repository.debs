@@ -10,16 +10,10 @@ DISTRO=kinetic
 
 # create list of packages to install
 packagelist=(
-  bison
-  flex
-  gawk
-  g++-multilib
-  pypy
   python-catkin-lint
   python-rosinstall
   ros-${DISTRO}-ros
   ros-${DISTRO}-vision-opencv
-  unzip
 )
 
 ### Install debian packages listed in array above
