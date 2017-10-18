@@ -88,14 +88,15 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
 
     #hardcoded way - always same position while standing
     #if standing:
+    print 'VERTICAL OBJECT' #unless afterwards it prints horizontal
         #pose_out.pose.orientation.x = -0.51
         #pose_out.pose.orientation.y = -0.5
         #pose_out.pose.orientation.z = -0.5
         #pose_out.pose.orientation.w = 0.5
-        pose_out.pose.orientation.x = 0.5
-        pose_out.pose.orientation.y = 0.5
-        pose_out.pose.orientation.z = -0.5
-        pose_out.pose.orientation.w = 0.5
+    pose_out.pose.orientation.x = 0.686
+    pose_out.pose.orientation.y = -0.214
+    pose_out.pose.orientation.z = 0.665
+    pose_out.pose.orientation.w = -0.204
         #pose_out.pose.orientation.x = 0.707
         #pose_out.pose.orientation.y = 0.707
         #pose_out.pose.orientation.z = 0.0
@@ -169,6 +170,8 @@ def modify_pose_rotation(pose, offset=0.0, reference_axis='z', rotation_range=No
     #pose_out.pose.orientation.w = orientation_out[3]
 
     #hardcoded way - always same position while lying down
+
+    print 'HORIZONTAL OBJECT'
 
     # pose_out.pose.orientation.x = -0.71
     # pose_out.pose.orientation.y = -0.7
