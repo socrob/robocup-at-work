@@ -225,10 +225,8 @@ class PregraspPlanner(object):
         sampling_parameters.yaw.minimum = math.radians(self.min_roll)
         sampling_parameters.yaw.maximum = math.radians(self.max_roll)
 
-        #HACKED FOR NOW TODO REMOVE
-        object_is_upwards = True
-
         if object_is_upwards:
+            print "publish inmediatlyyyyyyyyy"
             self.pose_out.publish(modified_pose)
             self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')

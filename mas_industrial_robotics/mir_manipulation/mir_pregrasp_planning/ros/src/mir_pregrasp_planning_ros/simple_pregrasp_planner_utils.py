@@ -45,28 +45,28 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
     :rtype: brics_actuator.msg.PoseStamped, bool
 
     """
-    standing = False
+    #standing = False
     pose_out = copy.deepcopy(pose_in)
 
     # Checking if the orientation is 'standing':
     # if the pose's X axis of the pose is pointing upwards,
     # then it has a rotation of 'standing_angle' degrees around the Y axis
-    roll, pitch, yaw = transformations.euler_from_quaternion([
-        pose_in.pose.orientation.x, pose_in.pose.orientation.y,
-        pose_in.pose.orientation.z, pose_in.pose.orientation.w
-    ])
+    #roll, pitch, yaw = transformations.euler_from_quaternion([
+    #    pose_in.pose.orientation.x, pose_in.pose.orientation.y,
+    #    pose_in.pose.orientation.z, pose_in.pose.orientation.w
+    #])
 
     # to have the range of angles from 0-360
-    decision_angle = math.degrees(pitch) % 360.0
-
-    if (standing_angle - angular_tolerance) <= decision_angle \
-            <= (standing_angle + angular_tolerance):
-        standing = True
+    #decision_angle = math.degrees(pitch) % 360.0
+    #
+    #if (standing_angle - angular_tolerance) <= decision_angle \
+    #        <= (standing_angle + angular_tolerance):
+    #    standing = True
     # in case the object is upside down
-    if (standing_angle - angular_tolerance) <= (decision_angle + 180) \
-            <= (standing_angle + angular_tolerance):
-        standing = True
-
+    #if (standing_angle - angular_tolerance) <= (decision_angle + 180) \
+    #        <= (standing_angle + angular_tolerance):
+    #    standing = True
+    #
     # if standing:
     #     if pose_in.pose.position.z < height_threshold:
     #         # The object is re-oriented to be laying horizontally,
@@ -93,6 +93,8 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
         #pose_out.pose.orientation.y = -0.5
         #pose_out.pose.orientation.z = -0.5
         #pose_out.pose.orientation.w = 0.5
+    print pose_out
+    print "---------"
     pose_out.pose.orientation.x = 0.686
     pose_out.pose.orientation.y = -0.214
     pose_out.pose.orientation.z = 0.665
@@ -101,7 +103,7 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
         #pose_out.pose.orientation.y = 0.707
         #pose_out.pose.orientation.z = 0.0
         #pose_out.pose.orientation.w = 0.0
-    return pose_out, standing
+    return pose_out, True
 
 
 def modify_pose_rotation(pose, offset=0.0, reference_axis='z', rotation_range=None):
