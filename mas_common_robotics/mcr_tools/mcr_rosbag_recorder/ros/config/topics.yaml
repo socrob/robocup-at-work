@@ -1,7 +1,9 @@
 /tf
+/tf_static
 /scan_combined
 /scan_front
 /scan_rear
 /odom
 /amcl_pose
 /map
+/head_camera/rgb/image_raw
