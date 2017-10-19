@@ -206,6 +206,7 @@ class PoseGenerator:
             sample_parameters.height.minimum, sample_parameters.height.maximum,
             self.linear_step, (self.max_samples / number_of_fields)
         )
+        
         zeniths = utils.generate_samples(
             sample_parameters.zenith.minimum, sample_parameters.zenith.maximum,
             self.angular_step, (self.max_samples / number_of_fields)
@@ -224,12 +225,16 @@ class PoseGenerator:
             (self.max_samples / number_of_fields)
         )
 
-        transforms = [
+        # Sort azimuth and wrist rolls samples to start from the 'middle', which in our case is usually the best configuration for picking
+        azimuths = utils.sort_from_middle(azimuths)
+	wrist_rolls = utils.sort_from_middle(wrist_rolls)
+
+	transforms = [
             transformations.generate_grasp_matrix(
                 object_matrix, self.gripper_config_matrix, height_offset,
                 zenith, azimuth, wrist_roll, radial
-            ) for height_offset in height_offsets for zenith in zeniths
-            for azimuth in azimuths for wrist_roll in wrist_rolls for radial in radials
+            ) for height_offset in height_offsets for azimuth in azimuths
+            for wrist_roll in wrist_rolls for zenith in zeniths for radial in radials
         ]
 
         for transform in transforms:

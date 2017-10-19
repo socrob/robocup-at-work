@@ -10,6 +10,42 @@ import tf
 import rospy
 import geometry_msgs.msg
 
+def sort_from_middle(arr):
+    """
+    Sorts a min-to-max sorted array such that the first element will be the one in the middle. Example:
+      arr = [a b c d e]
+      arr_out = [c b d a e]
+    
+    Note: in case of an even number of elements (N), element N/2 - 1 is selected, but zero-indexed
+
+    :param arr: The array to be sorted.
+    :type arr: float[]
+
+    :return: A sorted copy of the input array
+    :rtype: float[]
+    """
+    if len(arr) < 3:
+	return arr
+
+    arr_out = []
+    arrLen = len(arr)
+
+    middleIdx = (arrLen - 1)/2
+    bwdIdx = middleIdx
+    fwdIdx = middleIdx+1
+
+    while fwdIdx < arrLen or bwdIdx >= 0:
+	if bwdIdx >= 0:
+	    arr_out.append(arr[bwdIdx])
+
+        if fwdIdx < arrLen:
+            arr_out.append(arr[fwdIdx])
+
+        bwdIdx = bwdIdx-1
+        fwdIdx = fwdIdx+1
+
+    assert len(arr_out) == arrLen
+    return arr_out
 
 def generate_samples(min_value, max_value, step, max_samples=50):
     """
