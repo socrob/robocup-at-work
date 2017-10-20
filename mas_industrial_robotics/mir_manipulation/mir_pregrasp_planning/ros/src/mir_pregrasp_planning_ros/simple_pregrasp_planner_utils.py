@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 This module contains functions used by the simple_pregrasp_planner node.
 
@@ -95,10 +96,10 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
         #pose_out.pose.orientation.w = 0.5
     print pose_out
     print "---------"
-    pose_out.pose.orientation.x = 0.686
-    pose_out.pose.orientation.y = -0.214
-    pose_out.pose.orientation.z = 0.665
-    pose_out.pose.orientation.w = -0.204
+    pose_out.pose.orientation.x = 0.625
+    pose_out.pose.orientation.y = -0.387
+    pose_out.pose.orientation.z = 0.551
+    pose_out.pose.orientation.w = 0.396
         #pose_out.pose.orientation.x = 0.707
         #pose_out.pose.orientation.y = 0.707
         #pose_out.pose.orientation.z = 0.0
