@@ -53,10 +53,11 @@ class SavePointCloud(State):
         if not os.path.exists(directory_path):
             os.makedirs(directory_path)
         else:
-            files_name = []
-            for file in os.listdir(directory_path):
-                files_name.append(int(file.replace(".pcd","")))
-            self.count = max(files_name) + 1
+            if len(os.listdir(directory_path)) >= 1:
+                files_name = []
+                for file in os.listdir(directory_path):
+                    files_name.append(int(file.replace(".pcd","")))
+                self.count = max(files_name) + 1
 
         file_path = directory_path + "/" + str(self.count) + ".pcd"
         self.name_pub.publish(file_path)
