@@ -8,8 +8,7 @@ import std_msgs.msg
 
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, qWarning, Signal
-from python_qt_binding.QtGui import QGraphicsView, QWidget, QSizePolicy
-
+from python_qt_binding.QtWidgets import QGraphicsView, QWidget, QSizePolicy
 
 class NodeEventsGraphicsView(QGraphicsView):
     def __init__(self, parent=None):
