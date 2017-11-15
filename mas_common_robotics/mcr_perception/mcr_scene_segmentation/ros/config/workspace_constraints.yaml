@@ -3,7 +3,7 @@ transform:
     filter_field_name: z
     filter_limit_min: -0.1
     filter_limit_max: 2.0
-    output_frame: /base_link
+    output_frame: /head_link_projected
 voxel_filter:
     leaf_size: 0.02
     filter_field_name: z
@@ -12,7 +12,11 @@ voxel_filter:
 passthrough_x:
     filter_field_name: x
     filter_limit_min: 0.0
-    filter_limit_max: 1.0 #2.0 for the ERL_Lisbon_2017
+    filter_limit_max: 1.5 #2.0 for the ERL_Lisbon_2017
+passthrough_y:
+    filter_field_name: y
+    filter_limit_min: -0.5
+    filter_limit_max: 0.5
 normal_estimation:
     k_search: 0
     radius_search: 0.03
