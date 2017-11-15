@@ -9,12 +9,12 @@ voxel_filter:
     filter_field_name: z
     filter_limit_min: 0.3 #0.2 filter out the floor if you don't need to recognize objects from the floor
     filter_limit_max: 1.2 # height of the object
-passthrough_x:
-    filter_field_name: x
-    filter_limit_min: 0.0
-    filter_limit_max: 1.5 #2.0 for the ERL_Lisbon_2017
 passthrough_y:
     filter_field_name: y
+    filter_limit_min: 0.0
+    filter_limit_max: 1.5 #2.0 for the ERL_Lisbon_2017
+passthrough_x:
+    filter_field_name: x
     filter_limit_min: -0.5
     filter_limit_max: 0.5
 normal_estimation:
