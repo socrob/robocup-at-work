@@ -10,6 +10,8 @@ find_package(catkin REQUIRED
     cv_bridge
 )
 
+find_package(OpenCV REQUIRED)
+
 generate_dynamic_reconfigure_options(
   ros/config/BackgroundChange.cfg
 )
@@ -32,6 +34,7 @@ include_directories(
   ros/include
   common/include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_library(background_change_detection
@@ -44,6 +47,7 @@ add_dependencies(background_change_detection
 
 target_link_libraries(background_change_detection
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
 )
 
 add_executable(background_change_detection_node 
@@ -57,6 +61,7 @@ add_dependencies(background_change_detection_node
 
 target_link_libraries(background_change_detection_node
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
   background_change_detection
 )
 
