@@ -40,19 +40,19 @@ class send_and_wait_events_combined(smach.State):
                         ('/mcr_navigation/direct_base_controller/event_out','e_success', True),
                         # if this happens it has failed
                         ('/mcr_navigation/collision_velocity_filter/event_out', 'e_zero_velocities_forwarded', False)]
-                timeout_duration=20),
+                timeout_duration=20, critical_error=True),
                 transitions={'success':'SET_ACTION_LIB_SUCCESS',
                              'timeout':'SET_ACTION_LIB_FAILURE',
                              'failure':'SET_ACTION_LIB_FAILURE'})
 
     """
-    def __init__(self, event_in_list=[], event_out_list=[], timeout_duration=20):
+    def __init__(self, event_in_list=[], event_out_list=[], timeout_duration=20, critical_error=True):
         smach.State.__init__(self, outcomes=['success', 'failure', 'timeout'])
 
         if not(self.send_event_init(event_in_list)):
             exit()
 
-        if not(self.wait_event_init(event_out_list, timeout_duration)):
+        if not(self.wait_event_init(event_out_list, timeout_duration, critical_error)):
             exit()
 
     def send_event_init(self, event_in_list):
@@ -84,7 +84,7 @@ class send_and_wait_events_combined(smach.State):
 
         return True
 
-    def wait_event_init(self, event_out_list, timeout_duration):
+    def wait_event_init(self, event_out_list, timeout_duration, critical_error):
         '''
 
         This method will take a list of event as input and then split them
@@ -114,6 +114,9 @@ class send_and_wait_events_combined(smach.State):
                    if all of the positive events or any of the negative event do not respond
                    with in the specified timeout for the state.
         '''
+        # this boolean variable decides if rospy.logerr of info will be used to print msg
+        self.critical_error = critical_error
+
         self.event_out_subscribers_list_ = []
         self.timeout = rospy.Duration.from_sec(timeout_duration)
         if not self.init_state(event_out_list):
@@ -159,7 +162,12 @@ class send_and_wait_events_combined(smach.State):
                 result = event.getResult().lower()
                 event_behavior = event.get_event_behavior()
                 if result == "failure":
-                    rospy.logerr("[wait_for_events] Received event {0}:{1}".format(event.get_event_name(),
+                    # print in red color if failure is considered to be a relevant system failure
+                    if self.critical_error:
+                        rospy.logerr("[wait_for_events] Received event {0}:{1}".format(event.get_event_name(),
+                                 event.get_latest_event()))
+                    else:
+                        rospy.loginfo("[wait_for_events] Received event {0}:{1}".format(event.get_event_name(),
                                  event.get_latest_event()))
                     return "failure"
                 elif result == "success":
