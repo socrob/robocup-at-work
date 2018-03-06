@@ -10,7 +10,7 @@ import moveit_msgs.msg
 
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, qWarning, Signal
-from python_qt_binding.QtGui import QWidget, QGridLayout, QPushButton, QButtonGroup, QVBoxLayout, \
+from python_qt_binding.QtWidgets import QWidget, QGridLayout, QPushButton, QButtonGroup, QVBoxLayout, \
     QFrame, QLineEdit, QTabWidget
 
 
