@@ -81,13 +81,18 @@ void ccCallback(geometry_msgs::TwistStampedConstPtr desiredVelocity)
     linear_in.header = desiredVelocity->header;
     linear_in.vector = desiredVelocity->twist.linear;
 
+    // wait for the transform to become available
+    tf_listener->waitForTransform(desiredVelocity->header.frame_id.c_str(), root_name.c_str(), ros::Time::now(), ros::Duration(0.5));
+
     try
     {
+        // transforming twist msg from "end_effector_link" to "arm_base_link" frame
         tf_listener->transformVector(root_name, linear_in, linear_out);
     }
-    catch (...)
+    catch (ros::Exception &e)
     {
         ROS_ERROR("Could not transform frames %s -> %s for linear transformation", desiredVelocity->header.frame_id.c_str(), root_name.c_str());
+        ROS_ERROR("Error occured: %s ", e.what());
         return;
     }
     geometry_msgs::Vector3Stamped angular_in;
@@ -99,9 +104,10 @@ void ccCallback(geometry_msgs::TwistStampedConstPtr desiredVelocity)
     {
         tf_listener->transformVector(root_name, angular_in, angular_out);
     }
-    catch (...)
+    catch (ros::Exception &e)
     {
         ROS_ERROR("Could not transform frames %s -> %s for angular transformation", desiredVelocity->header.frame_id.c_str(), root_name.c_str());
+        ROS_ERROR("Error occured: %s ", e.what());
         return;
     }
     targetVelocity.vel.data[0] = linear_out.vector.x;
