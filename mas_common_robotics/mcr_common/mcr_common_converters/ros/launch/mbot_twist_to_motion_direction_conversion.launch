@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="input_topic" default="/base/twist_controller/command" />
+
+  <node pkg="mcr_common_converters" type="mbot_looking_while_walking" name="mbot_looking_while_walking" ns="mcr_common" output="screen">
+    <rosparam command="load" file="$(find mcr_common_converters)/ros/config/twist_to_motion_direction_conversion.yaml" />
+    <remap from="~/input/twist" to="$(arg input_topic)" />
+  </node>
+
+</launch>
+

@@ -55,6 +55,17 @@ target_link_libraries(twist_to_motion_direction_conversion_node
 add_dependencies(twist_to_motion_direction_conversion_node ${catkin_EXPORTED_TARGETS})
 
 
+add_executable(mbot_looking_while_walking
+  ros/src/mbot_looking_while_walking.cpp
+)
+target_link_libraries(mbot_looking_while_walking
+  ${catkin_LIBRARIES}
+  motion_direction_calculation
+)
+add_dependencies(mbot_looking_while_walking ${catkin_EXPORTED_TARGETS})
+
+
+
 ### TESTS
 roslint_cpp()
 roslint_python(
@@ -80,6 +91,13 @@ install(PROGRAMS
 )
 
 install(TARGETS motion_direction_calculation twist_to_motion_direction_conversion_node
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+
+install(TARGETS motion_direction_calculation mbot_looking_while_walking
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
