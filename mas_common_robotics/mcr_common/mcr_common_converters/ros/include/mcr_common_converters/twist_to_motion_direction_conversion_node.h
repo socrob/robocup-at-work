@@ -14,6 +14,8 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PointStamped.h>
 #include <std_msgs/String.h>
+#include <std_msgs/UInt8MultiArray.h>
+//#include <sensor_msgs/JointState.h>
 #include <tf/transform_datatypes.h>
 #include <string>
 
@@ -33,15 +35,18 @@ public:
 private:
     void twistCallback(const geometry_msgs::TwistPtr &msg);
     void eventCallback(const std_msgs::StringPtr &msg);
+    //void headCallback(const sensor_msgs::JointState &msg);
 
     void computeMotionDirectionAndPublish();
 
 
     ros::Subscriber sub_twist_;
     ros::Subscriber sub_event_;
+    //ros::Subscriber sub_head_position_;
 
     ros::Publisher pub_pose_;
     ros::Publisher pub_point_;
+    ros::Publisher pub_head_;
 
     std::string frame_id_;
     double distance_to_frame_;
@@ -51,6 +56,8 @@ private:
 
     std_msgs::String event_msg_;
     bool event_msg_received_;
+
+    //sensor_msgs::JointState head_msg_;
 
     State current_state_;
 };
