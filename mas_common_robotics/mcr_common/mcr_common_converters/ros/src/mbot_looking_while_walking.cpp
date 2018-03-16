@@ -20,7 +20,7 @@ TwistToMotionDirectionConversionNode::TwistToMotionDirectionConversionNode() :
 
     sub_event_ = nh.subscribe("event_in", 1, &TwistToMotionDirectionConversionNode::eventCallback, this);
     sub_twist_ = nh.subscribe("/cmd_vel", 1, &TwistToMotionDirectionConversionNode::twistCallback, this);
-    //sub_head_position_ = nh.subscribe("/mbot_driver/interaction/mbot_head_angle_joint_state", 1, &TwistToMotionDirectionConversionNode::headCallback, this);
+    sub_head_position_ = nh.subscribe("/mbot_driver/interaction/mbot_head_angle_joint_state", 1, &TwistToMotionDirectionConversionNode::headCallback, this);
     //pub_pose_ = nh.advertise < geometry_msgs::PoseStamped > ("output/pose", 1);
     //pub_point_ = nh.advertise < geometry_msgs::PointStamped > ("output/point", 1);
     pub_head_ = nh.advertise < std_msgs::UInt8MultiArray > ("/cmd_head", 1);
@@ -34,6 +34,7 @@ TwistToMotionDirectionConversionNode::~TwistToMotionDirectionConversionNode()
 {
     sub_event_.shutdown();
     sub_twist_.shutdown();
+    sub_head_position_.shutdown();
     //pub_pose_.shutdown();
     //pub_point_.shutdown();
     pub_head_.shutdown();
@@ -51,10 +52,10 @@ void TwistToMotionDirectionConversionNode::eventCallback(const std_msgs::StringP
     event_msg_received_ = true;
 }
 
-//void TwistToMotionDirectionConversionNode::headCallback(const sensor_msgs::JointState &msg)
-//{
-//    head_msg_ = *msg;
-//}
+void TwistToMotionDirectionConversionNode::headCallback(const sensor_msgs::JointStatePtr &msg)
+{
+    head_msg_ = *msg;
+}
 
 void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
 {
@@ -70,6 +71,7 @@ void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
 
     int min_angle = 5;      // degrees
     int max_angle = 175;
+    float last_direction;
 
     std_msgs::UInt8MultiArray controlMsg;
     controlMsg.data.resize(2);
@@ -88,8 +90,14 @@ void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
     {
         controlMsg.data[0] = int(motion_direction);
     }
-    else if (motion_direction < min_angle || motion_direction > 270){ controlMsg.data[0] = int(min_angle);} // minimum admissible angle
-    else if (motion_direction > max_angle && motion_direction < 271){ controlMsg.data[0] = int(max_angle);} // maximum admissible angle
+    else if (motion_direction > 210 && motion_direction < 330){
+		last_direction = head_msg_.position[0]* 180 / M_PI;
+		if (last_direction > 90){controlMsg.data[0] = int(max_angle);}
+		else if (last_direction <= 90){controlMsg.data[0] = int(min_angle);}
+		
+	}
+    else if (motion_direction < min_angle || motion_direction >= 330){ controlMsg.data[0] = int(min_angle);} // minimum admissible angle
+    else if (motion_direction > max_angle && motion_direction <= 210){ controlMsg.data[0] = int(max_angle);} // maximum admissible angle
 
 
     ROS_INFO_STREAM("Turning head to"<< controlMsg.data[0] << " with "<< controlMsg.data[1] << " speed");
