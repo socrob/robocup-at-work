@@ -59,13 +59,9 @@ void TwistToMotionDirectionConversionNode::headCallback(const sensor_msgs::Joint
 
 void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
 {
-       
     // if there is not motion, return
     if (fabs(twist_msg_.linear.x) + fabs(twist_msg_.linear.y) + fabs(twist_msg_.angular.z) == 0)
         return;
-
-    //double motion_direction = 0.0;
-    //double orientation = 1.57;
 
     double motion_direction = 0.00;
 
@@ -80,29 +76,18 @@ void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
     std::string speed_msg;
 
     // motion_direction based on base_twist_msg
+    // zero degrees is looking front (North)
     motion_direction = 90 - (getMotionDirectionFromTwist2D(twist_msg_.linear.x, twist_msg_.linear.y, twist_msg_.angular.z)* 180 / M_PI);
 
-    //orientation = tf::createQuaternionMsgFromRollPitchYaw(0.0, 0.0, motion_direction);
-
-    controlMsg.data[1] = 30;
+    controlMsg.data[1] = 50; // head rotating speed
 
     if (motion_direction > min_angle && motion_direction < max_angle)
     {
+		// only turns head if angle is admissible
         controlMsg.data[0] = int(motion_direction);
+        ROS_INFO_STREAM("Turning head to"<< controlMsg.data[0] << " with "<< controlMsg.data[1] << " speed");
+		pub_head_.publish(controlMsg);
     }
-    else if (motion_direction > 210 && motion_direction < 330){
-		last_direction = head_msg_.position[0]* 180 / M_PI;
-		if (last_direction > 90){controlMsg.data[0] = int(max_angle);}
-		else if (last_direction <= 90){controlMsg.data[0] = int(min_angle);}
-		
-	}
-    else if (motion_direction < min_angle || motion_direction >= 330){ controlMsg.data[0] = int(min_angle);} // minimum admissible angle
-    else if (motion_direction > max_angle && motion_direction <= 210){ controlMsg.data[0] = int(max_angle);} // maximum admissible angle
-
-
-    ROS_INFO_STREAM("Turning head to"<< controlMsg.data[0] << " with "<< controlMsg.data[1] << " speed");
-
-    pub_head_.publish(controlMsg);
 }
 
 void TwistToMotionDirectionConversionNode::update()
