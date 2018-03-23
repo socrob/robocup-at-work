@@ -85,7 +85,7 @@ void TwistToMotionDirectionConversionNode::computeMotionDirectionAndPublish()
     {
 		// only turns head if angle is admissible
         controlMsg.data[0] = int(motion_direction);
-        ROS_INFO_STREAM("Turning head to"<< controlMsg.data[0] << " with "<< controlMsg.data[1] << " speed");
+        //ROS_INFO_STREAM("Turning head to"<< controlMsg.data[0] << " with "<< controlMsg.data[1] << " speed");
 		pub_head_.publish(controlMsg);
     }
 }

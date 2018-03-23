@@ -35,6 +35,7 @@ public:
 private:
     void twistCallback(const geometry_msgs::TwistPtr &msg);
     void eventCallback(const std_msgs::StringPtr &msg);
+    // Turning head while walking feature
     void headCallback(const sensor_msgs::JointStatePtr &msg);
 
     void computeMotionDirectionAndPublish();
@@ -42,10 +43,12 @@ private:
 
     ros::Subscriber sub_twist_;
     ros::Subscriber sub_event_;
+    // Turning head while walking feature
     ros::Subscriber sub_head_position_;
 
     ros::Publisher pub_pose_;
     ros::Publisher pub_point_;
+    // Turning head while walking feature
     ros::Publisher pub_head_;
 
     std::string frame_id_;
@@ -57,6 +60,7 @@ private:
     std_msgs::String event_msg_;
     bool event_msg_received_;
 
+    // Turning head while walking feature
     sensor_msgs::JointState head_msg_;
 
     State current_state_;

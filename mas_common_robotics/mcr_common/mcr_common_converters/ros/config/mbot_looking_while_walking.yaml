@@ -1,0 +1,11 @@
+# COPIED FROM ROBOCUP-AT-WORK
+
+frame_id: /head_link        
+distance_to_frame: 1.5
+
+# HEAD LIMITS     
+                  # Note:   0 degrees  mbot looks front
+min_angle: 5      # degrees
+max_angle: 175    # degrees
+
+# DYNAMIC RECONFIGURE
