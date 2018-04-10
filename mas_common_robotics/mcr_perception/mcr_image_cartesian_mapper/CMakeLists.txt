@@ -14,6 +14,7 @@ find_package(catkin REQUIRED
 )
 
 find_package(Eigen REQUIRED)
+find_package(OpenCV REQUIRED)
 
 catkin_package(
   CATKIN_DEPENDS 
@@ -45,6 +46,7 @@ add_dependencies(image_cartesian_mapper_node
 target_link_libraries(image_cartesian_mapper_node
   ${catkin_LIBRARIES}
   ${Eigen_LIBRARIES}
+  ${OpenCV_LIBS}
 )
 
 install(TARGETS image_cartesian_mapper_node

@@ -52,7 +52,7 @@ add_dependencies(blob_tracking_node
 
 target_link_libraries(blob_tracking_node
   ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
+  ${OpenCV_LIBS}
 )
 
 install(TARGETS blob_tracking_node

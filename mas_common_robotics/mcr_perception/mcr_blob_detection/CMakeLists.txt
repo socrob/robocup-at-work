@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
     cvblobs
 )
 
+find_package(OpenCV REQUIRED)
+
 generate_dynamic_reconfigure_options(
   ros/config/BlobDetection.cfg
 )
@@ -51,6 +53,7 @@ add_dependencies(blob_detection_node
 
 target_link_libraries(blob_detection_node
    ${catkin_LIBRARIES}
+   ${OpenCV_LIBS}
 )
 
 ### TESTS
