@@ -9,7 +9,7 @@ catkin_python_setup()
 
 catkin_package()
 
-install(PROGRAMS
-  scripts/rqt_action_client
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+#install(PROGRAMS
+#  scripts/rqt_action_client
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
