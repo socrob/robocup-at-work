@@ -87,23 +87,14 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
     #         pose_out.pose.orientation.z = 0.0
     #         pose_out.pose.orientation.w = -math.cos(math.pi / 4)
 
-    #hardcoded way - always same position while standing
-    #if standing:
-    print 'VERTICAL OBJECT' #unless afterwards it prints horizontal
-        #pose_out.pose.orientation.x = -0.51
-        #pose_out.pose.orientation.y = -0.5
-        #pose_out.pose.orientation.z = -0.5
-        #pose_out.pose.orientation.w = 0.5
-    print pose_out
-    print "---------"
-    pose_out.pose.orientation.x = 0.625
-    pose_out.pose.orientation.y = -0.387
-    pose_out.pose.orientation.z = 0.551
-    pose_out.pose.orientation.w = 0.396
-        #pose_out.pose.orientation.x = 0.707
-        #pose_out.pose.orientation.y = 0.707
-        #pose_out.pose.orientation.z = 0.0
-        #pose_out.pose.orientation.w = 0.0
+    # HACK: consider always an standing object
+    # if standing:
+
+    # front small table
+    pose_out.pose.orientation.x = -0.298
+    pose_out.pose.orientation.y = 0.561
+    pose_out.pose.orientation.z = 0.672
+    pose_out.pose.orientation.w = -0.380
     return pose_out, True
 
 
