@@ -12,7 +12,7 @@ import roslib.message
 
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, qWarning, Signal
-from python_qt_binding.QtGui import QWidget, QGraphicsView, QGridLayout, QPushButton, QButtonGroup, QVBoxLayout, QFrame, QLineEdit
+from python_qt_binding.QtWidgets import QWidget, QGraphicsView, QGridLayout, QPushButton, QButtonGroup, QVBoxLayout, QFrame, QLineEdit
 
 class ActionClientGraphicsView(QGraphicsView):
     def __init__(self, parent=None):
