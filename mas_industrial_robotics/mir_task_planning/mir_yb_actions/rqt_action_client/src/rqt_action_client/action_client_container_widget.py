@@ -6,7 +6,7 @@ import rospkg
 
 from python_qt_binding import loadUi
 from python_qt_binding.QtCore import Qt, qWarning, Signal
-from python_qt_binding.QtGui import QWidget, QGridLayout, QPushButton
+from python_qt_binding.QtWidgets import QWidget, QGridLayout, QPushButton
 
 from action_client_widget import ActionClientWidget
 
