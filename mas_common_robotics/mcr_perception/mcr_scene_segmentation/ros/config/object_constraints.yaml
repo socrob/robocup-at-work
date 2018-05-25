@@ -1,7 +1,7 @@
 # reasonable parameters for @Work objects
 tabletop_cloud_accumulator:
     min_height: 0.01
-    max_height: 0.50 #default: 0.5
+    max_height: 0.5            # default : 0.5
     accumulation_timeout: 5
     accumulate_clouds: 1
     octree_resolution: 0.0025
@@ -12,4 +12,4 @@ tabletop_cloud_clusterer:
     object_min_height: 0.011
     min_distance_to_polygon: 0.03
     min_cluster_size: 25
-    max_cluster_size: 10000 #default: 5000
+    max_cluster_size: 10000    # default: 5000
