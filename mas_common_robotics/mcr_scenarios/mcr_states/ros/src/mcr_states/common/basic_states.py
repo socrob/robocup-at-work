@@ -149,8 +149,7 @@ class send_and_wait_events_combined(smach.State):
         start_time = rospy.Time.now()
         temp_events = copy.copy(self.event_out_subscribers_list_)
 
-        while(rospy.Time.now() - start_time < self.timeout):
-
+        while not rospy.is_shutdown():
             num_pos_events = 0
             for event in temp_events:
                 if event.get_event_behavior():
@@ -180,6 +179,9 @@ class send_and_wait_events_combined(smach.State):
                                       event.get_latest_event()))
 
                     temp_events.remove(event)
+
+            if rospy.Time.now() - start_time > self.timeout * 10:
+                break;
 
             rospy.sleep(0.01)
 
