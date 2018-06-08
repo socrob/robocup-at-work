@@ -89,12 +89,15 @@ class PregraspPlanner(object):
                 "Rotation range must a list of two elements."
 
         # Closest distance the gripper should be to the object (in meters).
-        self.min_distance_to_object = rospy.get_param('~min_distance_to_object', 0.0)
+        self.min_distance_to_object = rospy.get_param('~min_distance_to_object', 0.01)
         # Farthest distance the gripper should be to the object (in meters).
-        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.0)
+        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.3)
 
         # Sampling parameters (in degrees) from dynamic reconfiguration server.
         dynamic_reconfig_srv = Server(AngleConfig, self.dynamic_reconfig_cb)
+    
+
+
 
         # Angular tolerance to check if an object is standing up (in degrees).
         self.angular_tolerance = rospy.get_param('~angular_tolerance', 2.0)
@@ -113,6 +116,7 @@ class PregraspPlanner(object):
         # Subscribers
         rospy.Subscriber('~event_in', std_msgs.msg.String, self.event_in_cb)
         rospy.Subscriber('~pose_in', geometry_msgs.msg.PoseStamped, self.pose_in_cb)
+
 
     def dynamic_reconfig_cb(self, config, level):
         rospy.loginfo("""Reconfigure Request: {min_azimuth}, {min_zenith},\
@@ -211,10 +215,10 @@ class PregraspPlanner(object):
         Publishes the component's outputs.
 
         """
-        modified_pose, object_is_upwards = pregrasp_planner_utils.modify_pose(
-            self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance
-        )
-
+        modified_pose, object_is_upwards = pregrasp_planner_utils.modify_pose(                  
+            self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance)      
+        #object_is_upwards=True
+            
         sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
         sampling_parameters.radial_distance.minimum = self.min_distance_to_object
         sampling_parameters.radial_distance.maximum = self.max_distance_to_object
@@ -226,8 +230,10 @@ class PregraspPlanner(object):
         sampling_parameters.yaw.maximum = math.radians(self.max_roll)
 
         if object_is_upwards:
-            print "publish inmediatlyyyyyyyyy"
+            print "publish immediatelyyyyyyyyy"
             self.pose_out.publish(modified_pose)
+            print "modified pose:"
+            print modified_pose
             self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')

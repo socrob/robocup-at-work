@@ -91,10 +91,17 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
     # if standing:
 
     # front small table
-    pose_out.pose.orientation.x = -0.298
-    pose_out.pose.orientation.y = 0.561
-    pose_out.pose.orientation.z = 0.672
-    pose_out.pose.orientation.w = -0.380
+    # pose_out.pose.orientation.x = -0.298
+    # pose_out.pose.orientation.y = 0.561
+    # pose_out.pose.orientation.z = 0.672
+    # pose_out.pose.orientation.w = -0.380
+
+    # #bag handover
+    pose_out.pose.orientation.x = 0.762 
+    pose_out.pose.orientation.y = -0.011
+    pose_out.pose.orientation.z = -0.575
+    pose_out.pose.orientation.w = -0.33
+    
     return pose_out, True
 
 
