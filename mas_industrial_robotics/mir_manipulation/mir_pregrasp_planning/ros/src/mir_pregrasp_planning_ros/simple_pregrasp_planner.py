@@ -121,6 +121,7 @@ class PregraspPlanner(object):
     def dynamic_reconfig_cb(self, config, level):
         rospy.loginfo("""Reconfigure Request: {min_azimuth}, {min_zenith},\
             {min_roll}, {max_azimuth}, {max_zenith}, {max_roll}""".format(**config))
+        
         self.min_azimuth = config.min_azimuth
         self.max_azimuth = config.max_azimuth
         self.min_zenith = config.min_zenith
@@ -215,19 +216,20 @@ class PregraspPlanner(object):
         Publishes the component's outputs.
 
         """
-        modified_pose, object_is_upwards = pregrasp_planner_utils.modify_pose(                  
+
+        modified_pose, object_is_upwards, sampling_parameters = pregrasp_planner_utils.modify_pose(
+            self.min_distance_to_object, self.max_distance_to_object, 
             self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance)      
+        
         #object_is_upwards=True
             
-        sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
-        sampling_parameters.radial_distance.minimum = self.min_distance_to_object
-        sampling_parameters.radial_distance.maximum = self.max_distance_to_object
-        sampling_parameters.azimuth.minimum = math.radians(self.min_azimuth)
-        sampling_parameters.azimuth.maximum = math.radians(self.max_azimuth)
-        sampling_parameters.zenith.minimum = math.radians(self.min_zenith)
-        sampling_parameters.zenith.maximum = math.radians(self.max_zenith)
-        sampling_parameters.yaw.minimum = math.radians(self.min_roll)
-        sampling_parameters.yaw.maximum = math.radians(self.max_roll)
+   
+        # sampling_parameters.azimuth.minimum = math.radians(self.min_azimuth)
+        # sampling_parameters.azimuth.maximum = math.radians(self.max_azimuth)
+        # sampling_parameters.zenith.minimum = math.radians(self.min_zenith)
+        # sampling_parameters.zenith.maximum = math.radians(self.max_zenith)
+        # sampling_parameters.yaw.minimum = math.radians(self.min_roll)
+        # sampling_parameters.yaw.maximum = math.radians(self.max_roll)
 
         if object_is_upwards:
             print "publish immediatelyyyyyyyyy"
