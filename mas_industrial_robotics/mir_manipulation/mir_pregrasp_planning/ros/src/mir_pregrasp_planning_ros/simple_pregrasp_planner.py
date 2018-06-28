@@ -57,6 +57,7 @@ import math
 import rospy
 import std_msgs.msg
 import geometry_msgs.msg
+import tf
 import mcr_manipulation_msgs.msg
 import mir_pregrasp_planning_ros.simple_pregrasp_planner_utils as pregrasp_planner_utils
 from dynamic_reconfigure.server import Server
@@ -73,6 +74,13 @@ class PregraspPlanner(object):
         # Params
         self.event = None
         self.pose_in = None
+
+        self.vel_base = geometry_msgs.msg.Twist()
+        self.listener2 = tf.TransformListener() #creating tf.TransformListener object
+        self.goalpose_msg = geometry_msgs.msg.PoseStamped() #to store goal pose
+        self.goalpose_msg_odom = geometry_msgs.msg.PoseStamped()
+        self.base_to_odom = None
+        self.wait_for_transform = 0.1
 
         # Tolerance to decide whether an object should be re-oriented,
         # based on its height (in meters).
@@ -116,6 +124,10 @@ class PregraspPlanner(object):
         # Subscribers
         rospy.Subscriber('~event_in', std_msgs.msg.String, self.event_in_cb)
         rospy.Subscriber('~pose_in', geometry_msgs.msg.PoseStamped, self.pose_in_cb)
+
+        self.pub_base_vel_twist = rospy.Publisher('/cmd_vel', geometry_msgs.msg.Twist, queue_size=1)
+
+        self.listener2 = tf.TransformListener() #creating tf.TransformListener object
 
 
     def dynamic_reconfig_cb(self, config, level):
@@ -220,19 +232,14 @@ class PregraspPlanner(object):
         modified_pose, object_is_upwards, sampling_parameters = pregrasp_planner_utils.modify_pose(
             self.min_distance_to_object, self.max_distance_to_object, 
             self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance)      
-        
-        #object_is_upwards=True
-            
-   
-        # sampling_parameters.azimuth.minimum = math.radians(self.min_azimuth)
-        # sampling_parameters.azimuth.maximum = math.radians(self.max_azimuth)
-        # sampling_parameters.zenith.minimum = math.radians(self.min_zenith)
-        # sampling_parameters.zenith.maximum = math.radians(self.max_zenith)
-        # sampling_parameters.yaw.minimum = math.radians(self.min_roll)
-        # sampling_parameters.yaw.maximum = math.radians(self.max_roll)
+
+
+        # self.goalpose_received = True
+        # # print ("goal pose received:", self.goalpose_msg)
+        # return
 
         if object_is_upwards:
-            print "publish immediatelyyyyyyyyy"
+            print "publish immediatelyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
             self.pose_out.publish(modified_pose)
             print "modified pose:"
             print modified_pose
@@ -240,19 +247,90 @@ class PregraspPlanner(object):
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')
         else:
+
+            print "deitadoooooooooooooooooooooooooooooooooooooooooooooooooooo"
+            # aqui o objecto esta deitado e por isso vai ser feito um topgrasp
+            # e por isso e preciso rodar a base para o objecto ficar ligeiramente de lado
+
+            #se estiver na regiao 1
+            if self.pose_in.pose.position.x > self.pose_in.pose.position.y:
+
+                print "no iiiiffffffffffffffffffffffffffffffffffffffffffffff"
+                
+                self.vel_base.linear.x = 0
+                self.vel_base.linear.y = 0
+                self.vel_base.linear.z = 0.0
+                self.vel_base.angular.x = 0.0 
+                self.vel_base.angular.y = 0.0
+                self.vel_base.angular.z = -0.3  #so sera necessario rotacao em torno do Z (com uma velocidade arbitaria??? -0.1 parece bem)  
+                self.pub_base_vel_twist.publish(self.vel_base)
+
+                self.goalpose_msg=self.pose_in
+
+                while self.goalpose_msg.pose.position.x > self.goalpose_msg.pose.position.y:
+                    
+                    self.checkTF()
+
+                    rospy.sleep(0.5)
+                
+
+            self.vel_base.linear.x = 0
+            self.vel_base.linear.y = 0
+            self.vel_base.linear.z = 0.0
+            self.vel_base.angular.x = 0.0 
+            self.vel_base.angular.y = 0.0
+            self.vel_base.angular.z = 0.0  
+            self.pub_base_vel_twist.publish(self.vel_base)
+
+            self.pose_out.publish(modified_pose)
+            self.sampling_parameters.publish(sampling_parameters)
+            self.grasp_type.publish('top_grasp')
+            self.event_out.publish('e_success')
+
+
             # the object is laying down, thus the rotation will be restricted
             # to only 180 degrees (e.g. top grasp)
-            rotated_pose = pregrasp_planner_utils.modify_pose_rotation(
-                modified_pose, offset=self.rotation_offset,
-                reference_axis=self.reference_axis, rotation_range=self.rotation_range
-            )
-            if rotated_pose:
-                self.pose_out.publish(rotated_pose)
-                self.sampling_parameters.publish(sampling_parameters)
-                self.grasp_type.publish('top_grasp')
-                self.event_out.publish('e_success')
-            else:
-                self.event_out.publish('e_failure')
+            # rotated_pose = pregrasp_planner_utils.modify_pose_rotation(
+            #     modified_pose, offset=self.rotation_offset,
+            #     reference_axis=self.reference_axis, rotation_range=self.rotation_range
+            # )
+            # if rotated_pose:
+            #     self.pose_out.publish(rotated_pose)
+            #     self.sampling_parameters.publish(sampling_parameters)
+            #     self.grasp_type.publish('top_grasp')
+            #     self.event_out.publish('e_success')
+            # else:
+            #     self.event_out.publish('e_failure')
+
+    def checkTF (self):
+
+             #This function get executed every time you receive a goal pose message
+        
+        # ensure that the code gets executed from beginning to end one time completely
+        while not rospy.is_shutdown():
+            # try:
+            # refresh the timestamp of the received pose
+            self.pose_in.header.stamp = rospy.Time.now() - rospy.Duration(0.025) # hack
+            # wait for transform to become availble
+            self.listener2.waitForTransform("odom","base_link",self.pose_in.header.stamp,\
+                                            rospy.Duration(self.wait_for_transform))
+            base_to_odom = self.listener2.lookupTransform("odom","base_link",self.pose_in.header.stamp)
+            if base_to_odom:
+                self.base_to_odom = base_to_odom
+                self.goalpose_msg_odom = self.listener2.transformPose('odom',self.pose_in)
+                self.goalpose_msg = self.listener2.transformPose('base_link',self.pose_in) #goal pose in reference to base_link
+                
+                print self.goalpose_msg
+
+                self.ready_to_start = True
+                break
+            # except:
+            #     pass
+            #     #rospy.logwarn ('Exception while transforming goal pose')
+
+        self.goalpose_received = True
+        # print ("goal pose received:", self.goalpose_msg)
+        return
 
     def reset_component_data(self):
         """

@@ -51,13 +51,13 @@ def create_window():
     linear_scale_x = Tkinter.Scale(
         master, command=position_x, from_=MIN_POSITION_X, to=MAX_POSITION_X,
         resolution=LINEAR_RESOLUTION, label="Position X")
-    linear_scale_x.set(0.170)                # estes valores pus para bag handover testing
+    linear_scale_x.set(0.470)                # estes valores pus para bag handover testing
     linear_scale_x.grid(row=0, column=0)
 
     linear_scale_y = Tkinter.Scale(
         master, command=position_y, from_=MIN_POSITION_Y, to=MAX_POSITION_Y,
         resolution=LINEAR_RESOLUTION, label="Position Y")
-    linear_scale_y.set(0.420)
+    linear_scale_y.set(0.220)
     linear_scale_y.grid(row=0, column=1)
 
     linear_scale_z = Tkinter.Scale(
@@ -172,7 +172,7 @@ def publish_pose():
     loop_rate = rospy.Rate(rospy.get_param('~loop_rate', 10))
 
     # the transparency of the object to be visualized
-    reference_frame = rospy.get_param('~reference_frame', 'base_link')
+    reference_frame = rospy.get_param('~reference_frame', 'odom')
 
     # the transparency of the object to be visualized
     transparency = rospy.get_param('~transparency', 0.5)

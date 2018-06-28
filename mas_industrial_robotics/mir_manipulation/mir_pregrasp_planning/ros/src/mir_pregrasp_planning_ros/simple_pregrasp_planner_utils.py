@@ -91,6 +91,8 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
         sampling_parameters.yaw.minimum = math.radians(-200)
         sampling_parameters.yaw.maximum = math.radians(-150)
     
+        standing_flag = False
+
     else:
 
         # front small table
@@ -107,7 +109,8 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
         sampling_parameters.zenith.maximum = math.radians(2)
         sampling_parameters.yaw.minimum = math.radians(-2)
         sampling_parameters.yaw.maximum = math.radians(2)
-    
+        
+        standing_flag = True
     
     # if standing:
     #     if pose_in.pose.position.z < height_threshold:   # mas ele aqui esta a ver a altura do centro do objecto
@@ -151,7 +154,7 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
     # pose_out.pose.orientation.w = -0.33
 
 
-    return pose_out, True, sampling_parameters
+    return pose_out, standing_flag, sampling_parameters
 
 
 def modify_pose_rotation(pose, offset=0.0, reference_axis='z', rotation_range=None):
