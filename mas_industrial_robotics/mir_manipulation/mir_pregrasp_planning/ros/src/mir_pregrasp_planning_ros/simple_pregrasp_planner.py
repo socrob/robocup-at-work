@@ -251,41 +251,38 @@ class PregraspPlanner(object):
             print "deitadoooooooooooooooooooooooooooooooooooooooooooooooooooo"
             # aqui o objecto esta deitado e por isso vai ser feito um topgrasp
             # e por isso e preciso rodar a base para o objecto ficar ligeiramente de lado
+            
+            self.checkTF()
 
-            #se estiver na regiao 1
-            if self.pose_in.pose.position.x > self.pose_in.pose.position.y:
-
-                print "no iiiiffffffffffffffffffffffffffffffffffffffffffffff"
+            while abs(self.goalpose_msg.pose.position.x) > abs(self.goalpose_msg.pose.position.y):
+                print "no whileeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 
+
                 self.vel_base.linear.x = 0
                 self.vel_base.linear.y = 0
                 self.vel_base.linear.z = 0.0
                 self.vel_base.angular.x = 0.0 
                 self.vel_base.angular.y = 0.0
-                self.vel_base.angular.z = -0.3  #so sera necessario rotacao em torno do Z (com uma velocidade arbitaria??? -0.1 parece bem)  
+                self.vel_base.angular.z = -0.1  #so sera necessario rotacao em torno do Z (com uma velocidade arbitaria??? -0.1 parece bem)  
                 self.pub_base_vel_twist.publish(self.vel_base)
 
-                self.goalpose_msg=self.pose_in
+                self.checkTF()
 
-                while self.goalpose_msg.pose.position.x > self.goalpose_msg.pose.position.y:
-                    
-                    self.checkTF()
-
-                    rospy.sleep(0.5)
-                
+                rospy.sleep(0.2)
+            
 
             self.vel_base.linear.x = 0
             self.vel_base.linear.y = 0
-            self.vel_base.linear.z = 0.0
+            self.vel_base.linear.z = 0
             self.vel_base.angular.x = 0.0 
             self.vel_base.angular.y = 0.0
             self.vel_base.angular.z = 0.0  
             self.pub_base_vel_twist.publish(self.vel_base)
 
-            self.pose_out.publish(modified_pose)
-            self.sampling_parameters.publish(sampling_parameters)
-            self.grasp_type.publish('top_grasp')
-            self.event_out.publish('e_success')
+        self.pose_out.publish(modified_pose)
+        self.sampling_parameters.publish(sampling_parameters)
+        self.grasp_type.publish('top_grasp')
+        self.event_out.publish('e_success')
 
 
             # the object is laying down, thus the rotation will be restricted
@@ -304,33 +301,31 @@ class PregraspPlanner(object):
 
     def checkTF (self):
 
-             #This function get executed every time you receive a goal pose message
+        #This function get executed every time you receive a goal pose message
         
         # ensure that the code gets executed from beginning to end one time completely
-        while not rospy.is_shutdown():
-            # try:
-            # refresh the timestamp of the received pose
-            self.pose_in.header.stamp = rospy.Time.now() - rospy.Duration(0.025) # hack
-            # wait for transform to become availble
-            self.listener2.waitForTransform("odom","base_link",self.pose_in.header.stamp,\
-                                            rospy.Duration(self.wait_for_transform))
-            base_to_odom = self.listener2.lookupTransform("odom","base_link",self.pose_in.header.stamp)
-            if base_to_odom:
-                self.base_to_odom = base_to_odom
-                self.goalpose_msg_odom = self.listener2.transformPose('odom',self.pose_in)
-                self.goalpose_msg = self.listener2.transformPose('base_link',self.pose_in) #goal pose in reference to base_link
-                
-                print self.goalpose_msg
+        # while not rospy.is_shutdown():
+        #     # try:
+        #     # refresh the timestamp of the received pose
+        self.pose_in.header.stamp = rospy.Time.now() - rospy.Duration(0.025) # hack
+        # wait for transform to become availble
+        self.listener2.waitForTransform("odom","base_link",self.pose_in.header.stamp,\
+                                        rospy.Duration(self.wait_for_transform))
+        base_to_odom = self.listener2.lookupTransform("odom","base_link",self.pose_in.header.stamp)
+        if base_to_odom:
+            self.base_to_odom = base_to_odom
+            self.goalpose_msg_odom = self.listener2.transformPose('odom',self.pose_in)
+            self.goalpose_msg = self.listener2.transformPose('base_link',self.pose_in) #goal pose in reference to base_link
+            
+            print self.goalpose_msg
 
-                self.ready_to_start = True
-                break
-            # except:
-            #     pass
-            #     #rospy.logwarn ('Exception while transforming goal pose')
+            self.ready_to_start = True
 
-        self.goalpose_received = True
+            
+
+        #self.goalpose_received = True
         # print ("goal pose received:", self.goalpose_msg)
-        return
+        #return
 
     def reset_component_data(self):
         """

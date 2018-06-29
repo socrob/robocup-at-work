@@ -95,7 +95,7 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
 
     else:
 
-        # front small table
+        # front small table -------------------esta front small table nao e boa, mas vale ir de frente
         pose_out.pose.orientation.x = -0.298
         pose_out.pose.orientation.y = 0.561
         pose_out.pose.orientation.z = 0.672
