@@ -77,10 +77,11 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
     sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
     if 1.5 < roll:   #1.5 porque esta em radians
         # top grasp
-        pose_out.pose.orientation.x = 0.08
-        pose_out.pose.orientation.y = 0.049
-        pose_out.pose.orientation.z = -0.128
-        pose_out.pose.orientation.w = -0.987
+        pose_out.pose.orientation.x = 0.090
+        pose_out.pose.orientation.y = 0.004             #0.099632; 0.02437; -0.71882; 0.68759
+        pose_out.pose.orientation.z = -0.709            #0.11589; -0.040699; -0.69794; 0.70554
+        pose_out.pose.orientation.w = -0.698            #0.073844; 0.0035124; -0.70143; 0.70889
+
 
         sampling_parameters.radial_distance.minimum = min_distance_to_object
         sampling_parameters.radial_distance.maximum = max_distance_to_object
@@ -96,10 +97,14 @@ def modify_pose(min_distance_to_object, max_distance_to_object, pose_in, height_
     else:
 
         # front small table -------------------esta front small table nao e boa, mas vale ir de frente
+        # -0.48333; 0.52017; 0.53185; -0.46146 - orientaion graspdefrente
+        
         pose_out.pose.orientation.x = -0.298
         pose_out.pose.orientation.y = 0.561
         pose_out.pose.orientation.z = 0.672
         pose_out.pose.orientation.w = -0.380
+
+        #tea_box - -0.30023; 0.5565; 0.6734; -0.38302
 
         sampling_parameters.radial_distance.minimum = min_distance_to_object
         sampling_parameters.radial_distance.maximum = max_distance_to_object
