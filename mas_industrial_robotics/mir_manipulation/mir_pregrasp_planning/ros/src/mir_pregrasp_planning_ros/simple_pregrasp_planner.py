@@ -237,12 +237,23 @@ class PregraspPlanner(object):
         # # print ("goal pose received:", self.goalpose_msg)
         # return
 
+        sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
+        sampling_parameters.radial_distance.minimum = self.min_distance_to_object
+        sampling_parameters.radial_distance.maximum = self.max_distance_to_object
+        sampling_parameters.azimuth.minimum = math.radians(self.min_azimuth)
+        sampling_parameters.azimuth.maximum = math.radians(self.max_azimuth)
+        sampling_parameters.zenith.minimum = math.radians(self.min_zenith)
+        sampling_parameters.zenith.maximum = math.radians(self.max_zenith)
+        sampling_parameters.yaw.minimum = math.radians(self.min_roll)
+        sampling_parameters.yaw.maximum = math.radians(self.max_roll)
+
+
         if object_is_upwards:
             print "publish immediatelyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
             self.pose_out.publish(modified_pose)
             print "modified pose:"
             print modified_pose
-            #self.sampling_parameters.publish(sampling_parameters)
+            self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')
         else:

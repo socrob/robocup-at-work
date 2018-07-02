@@ -148,11 +148,17 @@ def modify_pose(pose_in, height_threshold,
     # pose_out.pose.orientation.w = -0.380
 
     # top grasp
-    pose_out.pose.orientation.x = 0.08
-    pose_out.pose.orientation.y = 0.049
-    pose_out.pose.orientation.z = 0.0528
-    pose_out.pose.orientation.w = 0.987
+    # pose_out.pose.orientation.x = 0.08
+    # pose_out.pose.orientation.y = 0.049
+    # pose_out.pose.orientation.z = 0.0528
+    # pose_out.pose.orientation.w = 0.987
     
+    #tentar imitar a orientation do pose_in
+    pose_out.pose.orientation.x = pose_in.pose.orientation.x
+    pose_out.pose.orientation.y = pose_in.pose.orientation.y
+    pose_out.pose.orientation.z = pose_in.pose.orientation.z
+    pose_out.pose.orientation.w = pose_in.pose.orientation.w
+
     standing_flag = True
 
     # #bag handover
