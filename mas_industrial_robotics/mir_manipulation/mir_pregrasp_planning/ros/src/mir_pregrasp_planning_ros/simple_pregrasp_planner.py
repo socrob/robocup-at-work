@@ -229,10 +229,9 @@ class PregraspPlanner(object):
 
         """
 
-        modified_pose, object_is_upwards, sampling_parameters = pregrasp_planner_utils.modify_pose(
-            self.min_distance_to_object, self.max_distance_to_object, 
+        modified_pose, object_is_upwards = pregrasp_planner_utils.modify_pose(
             self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance)      
-
+        #aqui e preciso por mais um output e as distances como mais 2 inputs
 
         # self.goalpose_received = True
         # # print ("goal pose received:", self.goalpose_msg)
@@ -243,7 +242,7 @@ class PregraspPlanner(object):
             self.pose_out.publish(modified_pose)
             print "modified pose:"
             print modified_pose
-            self.sampling_parameters.publish(sampling_parameters)
+            #self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')
         else:
@@ -279,10 +278,10 @@ class PregraspPlanner(object):
             self.vel_base.angular.z = 0.0  
             self.pub_base_vel_twist.publish(self.vel_base)
 
-        self.pose_out.publish(modified_pose)
-        self.sampling_parameters.publish(sampling_parameters)
-        self.grasp_type.publish('top_grasp')
-        self.event_out.publish('e_success')
+            self.pose_out.publish(modified_pose)
+            self.sampling_parameters.publish(sampling_parameters)
+            self.grasp_type.publish('top_grasp')
+            self.event_out.publish('e_success')
 
 
             # the object is laying down, thus the rotation will be restricted
