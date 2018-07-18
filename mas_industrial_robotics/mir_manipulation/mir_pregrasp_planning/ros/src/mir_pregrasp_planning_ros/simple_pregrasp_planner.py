@@ -99,7 +99,7 @@ class PregraspPlanner(object):
         # Closest distance the gripper should be to the object (in meters).
         self.min_distance_to_object = rospy.get_param('~min_distance_to_object', 0.01)
         # Farthest distance the gripper should be to the object (in meters).
-        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.3)
+        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.4)
 
         # Sampling parameters (in degrees) from dynamic reconfiguration server.
         dynamic_reconfig_srv = Server(AngleConfig, self.dynamic_reconfig_cb)
