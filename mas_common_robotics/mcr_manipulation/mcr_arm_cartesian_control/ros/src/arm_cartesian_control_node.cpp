@@ -17,6 +17,8 @@
 #include <brics_actuator/JointVelocities.h>
 #include <tf/transform_listener.h>
 
+#include <signal.h>
+
 KDL::Chain arm_chain;
 std::vector<boost::shared_ptr<urdf::JointLimits> > joint_limits;
 
@@ -39,6 +41,17 @@ brics_actuator::JointVelocities jointMsg;
 
 std::string root_name = "DEFAULT_CHAIN_ROOT";
 
+// Defined later
+void stopMotion();
+
+void stopOnSignal(int sig)
+{
+  stopMotion();
+
+  ros::Duration(1).sleep();
+
+  ros::shutdown();
+}
 
 void jointstateCallback(sensor_msgs::JointStateConstPtr joints)
 {
@@ -207,7 +220,7 @@ void stopMotion()
 bool watchdog()
 {
 
-    double watchdog_time = 0.3;
+    static const double watchdog_time = 1.0;
     if (active == false)
     {
         return false;
@@ -219,6 +232,7 @@ bool watchdog()
 
     if (time > ros::Duration(watchdog_time))
     {
+        ROS_WARN("No velocity inputs to cartesian controller - watchdog triggered - stopMotion()");
         active = false;
         stopMotion();
         return false;
@@ -230,9 +244,14 @@ bool watchdog()
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "arm_cartesian_control");
+    ros::init(argc, argv, "arm_cartesian_control", ros::init_options::NoSigintHandler);
     ros::NodeHandle node_handle("~");
     tf_listener = new tf::TransformListener();
+
+    // Override the default ros sigint handler.
+    // This must be set after the first NodeHandle is created.
+    signal(SIGINT, stopOnSignal);
+
 
     double rate = 50;
 
