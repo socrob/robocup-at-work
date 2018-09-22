@@ -10,61 +10,61 @@ from sensor_msgs.msg import JointState
 
 class SavePoses(object):
 
-	def __init__ (self):
+    def __init__ (self):
 
-		self.__head_camera_angle_joint_idx = None
-		self.__head_camera_angle = None
+        self.__head_camera_angle_joint_idx = None
+        self.__head_camera_angle = None
 
 
-	    self.tf_listener = tf.TransformListener()
+        self.tf_listener = tf.TransformListener()
 
-	    self.tf_received = False
+        self.tf_received = False
 
-	    rospy.Subscriber('/joint_states', JointState, self.__callback_joint_states)
+        rospy.Subscriber('/joint_states', JointState, self.__callback_joint_states)
 
-	def __callback_joint_states(self, msg):
+    def __callback_joint_states(self, msg):
         if self.__head_camera_angle_joint_idx is None:
             self.__head_camera_angle_joint_idx = msg.name.index('head_link_to_head_camera_link')
         self.__head_camera_angle=msg.position[self.__head_camera_angle_joint_idx]
 
     def get_poses(self):
-	    while(not rospy.is_shutdown()):
-	        # get pose name from user
-	        pose_name = raw_input("\nPlease enter the pose name: ")
+        while(not rospy.is_shutdown()):
+            # get pose name from user
+            pose_name = raw_input("\nPlease enter the pose name: ")
 
-	        # get transformation between map and base_link
-	        while(not self.tf_received):
-	            try:
-	                self.tf_listener.waitForTransform('map', '/base_link', rospy.Time.now(), rospy.Duration(1))
-	                (trans, rot) = self.tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0));
+            # get transformation between map and base_link
+            while(not self.tf_received):
+                try:
+                    self.tf_listener.waitForTransform('map', '/base_link', rospy.Time.now(), rospy.Duration(1))
+                    (trans, rot) = self.tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0));
 
-	               	if self.__head_camera_angle is None:
-			            angle = None
-			        else:
-			        	angle = degrees(self.__head_camera_angle+0.1) - 90
-	                
-	                (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(rot)
-	                
-	                pose_description = "%s: [%lf, %lf, %lf]\n" % (pose_name, trans[0], trans[1], yaw)
+                    if self.__head_camera_angle is None:
+                        angle = None
+                    else:
+                        angle = degrees(self.__head_camera_angle+0.1) - 90
+                    
+                    (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(rot)
+                    
+                    pose_description = "%s: [%lf, %lf, %lf]\n" % (pose_name, trans[0], trans[1], yaw)
 
-	                tilt = "%s: %lf\n" % (pose_name, angle)
+                    tilt = "%s: %lf\n" % (pose_name, angle)
 
-	                print pose_description
-	                print tilt
+                    print pose_description
+                    print tilt
 
-	                self.tf_received = True
-	            except Exception, e:
-	                rospy.sleep(1)
-	                self.tf_received = False
-	        self.tf_received = False
+                    self.tf_received = True
+                except Exception, e:
+                    rospy.sleep(1)
+                    self.tf_received = False
+            self.tf_received = False
 
-	        #write position into a file
-	        pose_file = open('navigation_goals.yaml', 'a')
-	        tilt_file = open('navigation_goals_camera_tilt.yaml', 'a')
-	        pose_file.write(pose_description)	
-	        tilt_file.write(tilt)	    
-	        pose_file.close()
-	        tilt_file.close()
+            #write position into a file
+            pose_file = open('navigation_goals.yaml', 'a')
+            tilt_file = open('navigation_goals_camera_tilt.yaml', 'a')
+            pose_file.write(pose_description)   
+            tilt_file.write(tilt)       
+            pose_file.close()
+            tilt_file.close()
 
 
 if __name__ == "__main__":
