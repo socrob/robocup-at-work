@@ -4,7 +4,7 @@ import roslib; roslib.load_manifest('mcr_navigation_tools')
 import rospy
 import tf
 from sensor_msgs.msg import JointState
-
+from math import degrees
 
 
 
@@ -41,8 +41,8 @@ class SavePoses(object):
                     if self.__head_camera_angle is None:
                         angle = None
                     else:
-                        angle = degrees(self.__head_camera_angle+0.1) - 90
-                    
+                        angle = degrees(self.__head_camera_angle) - 90
+
                     (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(rot)
                     
                     pose_description = "%s: [%lf, %lf, %lf]\n" % (pose_name, trans[0], trans[1], yaw)
@@ -54,6 +54,7 @@ class SavePoses(object):
 
                     self.tf_received = True
                 except Exception, e:
+                    rospy.loginfo(e)
                     rospy.sleep(1)
                     self.tf_received = False
             self.tf_received = False
