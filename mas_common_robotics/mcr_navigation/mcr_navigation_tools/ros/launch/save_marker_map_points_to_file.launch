@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+<group ns="mcr_navigation" >
+
+    <arg name="launch_specific" default="true" />
+    <arg name="marker_class" default="erl4.cocacola" />
+    <arg name="robot_env" default="$(optenv ROBOT_ENV !!NO_ROBOT_ENV_SET!!)" />
+    <arg name="output_path" default="$(find mbot_world_model)/maps/$(arg robot_env)/furniture_points.yaml " />
+
+    <!-- Specific Detector -->
+    <include if="$(arg launch_specific)" file="$(find darknet_ros_py)/ros/launch/darknet_ros_py.launch" >
+      <arg name="config_file" default="$(find darknet_ros_py)/ros/config/erl/erl_known_head.yaml" />
+      <arg name="threshold" value="0.5"/>
+      <arg name="input_topic" value="/head_camera/rgb/image_rect_color"/>
+      <arg name="debug" value="false"/>
+      <arg name="only_best" value="true"/>
+      <arg name="node_name" value="specific_detector"/>
+      <arg name="output" value="log"/>
+    </include>
+
+    <!-- Specific Localizer -->
+    <include if="$(arg launch_specific)" file="$(find mbot_object_localization)/ros/launch/mbot_object_localization.launch" >
+      <arg name="remove_intersections" value="true"/>
+      <arg name="roi_array_topic" value="specific_detector/detections" />
+      <arg name="node_name" value="specific_localizer" />
+        <arg name="filter_classes" value="[$(arg marker_class)]" />
+    </include>
+
+	<node pkg="mcr_navigation_tools" type="save_marker_map_points_to_file" name="marker_map_points_to_file_node"
+		  respawn="false" output="screen" >
+        <param name="markers_topic" value="specific_localizer/localized_object_poses" />
+        <param name="output_path" value="$(arg output_path)" />
+    </node>
+
+</group>
+</launch>

@@ -19,6 +19,9 @@ if __name__ == "__main__":
 
         # get transformation between map and base_link
         while(not tf_received):
+            if rospy.is_shutdown():
+                from sys import exit
+                exit(0)
             try:
                 tf_listener.waitForTransform('map', '/base_link', rospy.Time.now(), rospy.Duration(1))
                 (trans, rot) = tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0));

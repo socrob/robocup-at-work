@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+import rospy
+import tf2_ros
+from geometry_msgs.msg import *
+import tf2_geometry_msgs
+import sys, os
+
+
+markers = None
+record_marker_positions = False
+
+
+def poses_callback(msg):
+    global markers
+    global record_marker_positions
+
+    if record_marker_positions and len(msg.poses) > 0:
+        markers = msg
+        record_marker_positions = False
+
+
+if __name__ == "__main__":
+    rospy.init_node("save_marker_map_point_to_file")
+
+    rospy.sleep(5)
+
+    rospy.Subscriber(rospy.get_param("~markers_topic"), PoseArray, poses_callback, queue_size=10)
+    tf_buf = tf2_ros.Buffer(rospy.Duration(5))
+    tf_listener = tf2_ros.TransformListener(tf_buf)
+    output_path = rospy.get_param("~output_path")
+
+    tf_received = False
+
+    while not rospy.is_shutdown():
+        # get pose name from user
+        pose_name = raw_input("\nPlease enter the pose name: ")
+        record_marker_positions = True
+
+        # Wait until the marker is detected
+        while markers is None and not rospy.is_shutdown():
+            rospy.sleep(1)
+            print("Waiting marker")
+
+        # Wait until the transformation between map and marker is received
+        while not tf_received and not rospy.is_shutdown():
+
+            if rospy.is_shutdown():
+                sys.exit()
+
+            marker_point = markers.poses[0].position
+            try:
+                marker_point_stamped = PointStamped(point=marker_point, header=markers.header)
+                rospy.loginfo(marker_point_stamped)
+
+                trans = tf_buf.lookup_transform('map', marker_point_stamped.header.frame_id, rospy.Time(0), rospy.Duration(2))
+                map_point_stamped = tf2_geometry_msgs.do_transform_point(marker_point_stamped, trans)
+
+                pose_description = "%s: [%lf, %lf, %lf]\n" % (pose_name,
+                                                              map_point_stamped.point.x,
+                                                              map_point_stamped.point.y,
+                                                              map_point_stamped.point.z)
+                print pose_description
+                tf_received = True
+
+            except tf2_ros.buffer_interface.TypeException as e:
+                rospy.sleep(0.1)
+                tf_received = False
+                rospy.logwarn(e)
+
+        tf_received = False
+        markers = None
+
+        if rospy.is_shutdown():
+            sys.exit()
+
+        # write position into a file
+        print("updated file %s" % os.path.abspath(output_path))
+        pose_file = open(output_path, 'a')
+        pose_file.write(pose_description)
+        pose_file.close()
+
