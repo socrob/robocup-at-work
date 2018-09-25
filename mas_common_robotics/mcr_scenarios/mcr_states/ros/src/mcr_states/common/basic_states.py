@@ -404,6 +404,7 @@ class set_named_config(smach.State):
                 if self.event == "e_success":
                     return 'success'
                 else:
+                    rospy.logerr('Could not setup config {}'.format(self.named_config))
                     return 'failure'
             rate.sleep()
         return 'timeout'
