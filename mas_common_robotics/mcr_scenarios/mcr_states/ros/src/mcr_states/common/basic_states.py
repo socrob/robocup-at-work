@@ -396,7 +396,7 @@ class set_named_config(smach.State):
         self.config_name_pub.publish(self.named_config)
         self.event_in_pub.publish("e_start")
 
-        timeout = rospy.Duration.from_sec(1.0)
+        timeout = rospy.Duration.from_sec(3.0)
         rate = rospy.Rate(10)
         start_time = rospy.Time.now()
         while (rospy.Time.now() - start_time) < timeout:

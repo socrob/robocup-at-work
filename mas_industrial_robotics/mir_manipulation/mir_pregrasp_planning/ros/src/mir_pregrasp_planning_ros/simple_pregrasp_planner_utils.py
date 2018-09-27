@@ -10,9 +10,11 @@ import math
 import numpy
 import copy
 import tf.transformations as transformations
+import mcr_manipulation_msgs.msg
 
 
-def modify_pose(pose_in, height_threshold, standing_angle=270., angular_tolerance=2.):
+def modify_pose(pose_in, height_threshold, 
+    standing_angle=270., angular_tolerance=2.):
     """
     Computes a modified pose (of an object) only if the object is
     standing (vertically) on a surface, based on the following criteria:
@@ -46,30 +48,79 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
     :rtype: brics_actuator.msg.PoseStamped, bool
 
     """
+
     #standing = False
-    pose_out = copy.deepcopy(pose_in)
+    pose_out = copy.deepcopy(pose_in) #deepcopy copia tudo de uma instance e como esta a usar programacao por objectos
 
     # Checking if the orientation is 'standing':
-    # if the pose's X axis of the pose is pointing upwards,
-    # then it has a rotation of 'standing_angle' degrees around the Y axis
-    #roll, pitch, yaw = transformations.euler_from_quaternion([
+    # # if the pose's X axis of the pose is pointing upwards,   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    # # then it has a rotation of 'standing_angle' degrees around the Y axis
+    
+    # roll, pitch, yaw = transformations.euler_from_quaternion([
     #    pose_in.pose.orientation.x, pose_in.pose.orientation.y,
     #    pose_in.pose.orientation.z, pose_in.pose.orientation.w
-    #])
+    # ])
 
-    # to have the range of angles from 0-360
-    #decision_angle = math.degrees(pitch) % 360.0
-    #
-    #if (standing_angle - angular_tolerance) <= decision_angle \
-    #        <= (standing_angle + angular_tolerance):
-    #    standing = True
-    # in case the object is upside down
-    #if (standing_angle - angular_tolerance) <= (decision_angle + 180) \
-    #        <= (standing_angle + angular_tolerance):
-    #    standing = True
-    #
+    # print'OLHA O ROLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL'
+    # print roll
+    
+    # # # to have the range of angles from 0-360
+    # # decision_angle = math.degrees(pitch) % 360.0
+    
+
+    # # if (standing_angle - angular_tolerance) <= decision_angle <= (standing_angle + angular_tolerance):
+    # #    standing = True
+    # # #in case the object is upside down
+    # # if (standing_angle - angular_tolerance) <= (decision_angle + 180) <= (standing_angle + angular_tolerance):
+    # #    standing = True
+
+    # sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
+    # if 1.5 < roll:   #1.5 porque esta em radians
+    #     # top grasp
+    #     pose_out.pose.orientation.x = 0.090
+    #     pose_out.pose.orientation.y = 0.004             #0.099632; 0.02437; -0.71882; 0.68759
+    #     pose_out.pose.orientation.z = -0.709            #0.11589; -0.040699; -0.69794; 0.70554
+    #     pose_out.pose.orientation.w = -0.698            #0.073844; 0.0035124; -0.70143; 0.70889
+
+
+    #     #0.074423; 0.036365; 0.034619; 0.99596 - orientation do side_top_grasp
+
+    #     sampling_parameters.radial_distance.minimum = min_distance_to_object
+    #     sampling_parameters.radial_distance.maximum = max_distance_to_object
+    #     sampling_parameters.azimuth.minimum = math.radians(-2)
+    #     sampling_parameters.azimuth.maximum = math.radians(2)
+    #     sampling_parameters.zenith.minimum = math.radians(-2)
+    #     sampling_parameters.zenith.maximum = math.radians(2)
+    #     sampling_parameters.yaw.minimum = math.radians(-200)
+    #     sampling_parameters.yaw.maximum = math.radians(-150)
+    
+    #     standing_flag = False
+
+    # else:
+
+    #     # front small table -------------------esta front small table nao e boa, mas vale ir de frente
+    #     # -0.48333; 0.52017; 0.53185; -0.46146 - orientaion graspdefrente
+        
+    #     pose_out.pose.orientation.x = -0.298
+    #     pose_out.pose.orientation.y = 0.561
+    #     pose_out.pose.orientation.z = 0.672
+    #     pose_out.pose.orientation.w = -0.380
+
+    #     #tea_box - -0.30023; 0.5565; 0.6734; -0.38302
+
+    #     sampling_parameters.radial_distance.minimum = min_distance_to_object
+    #     sampling_parameters.radial_distance.maximum = max_distance_to_object
+    #     sampling_parameters.azimuth.minimum = math.radians(10)
+    #     sampling_parameters.azimuth.maximum = math.radians(20)
+    #     sampling_parameters.zenith.minimum = math.radians(-2)
+    #     sampling_parameters.zenith.maximum = math.radians(2)
+    #     sampling_parameters.yaw.minimum = math.radians(-2)
+    #     sampling_parameters.yaw.maximum = math.radians(2)
+        
+    #     
+    
     # if standing:
-    #     if pose_in.pose.position.z < height_threshold:
+    #     if pose_in.pose.position.z < height_threshold:   # mas ele aqui esta a ver a altura do centro do objecto
     #         # The object is re-oriented to be laying horizontally,
     #         # but maintaining its rotation
     #         new_orientation = transformations.quaternion_from_euler(
@@ -91,11 +142,33 @@ def modify_pose(pose_in, height_threshold, standing_angle=270., angular_toleranc
     # if standing:
 
     # front small table
-    pose_out.pose.orientation.x = -0.298
-    pose_out.pose.orientation.y = 0.561
-    pose_out.pose.orientation.z = 0.672
-    pose_out.pose.orientation.w = -0.380
-    return pose_out, True
+    # pose_out.pose.orientation.x = -0.298
+    # pose_out.pose.orientation.y = 0.561
+    # pose_out.pose.orientation.z = 0.672
+    # pose_out.pose.orientation.w = -0.380
+
+    # top grasp
+    # pose_out.pose.orientation.x = 0.08
+    # pose_out.pose.orientation.y = 0.049
+    # pose_out.pose.orientation.z = 0.0528
+    # pose_out.pose.orientation.w = 0.987
+    
+    #tentar imitar a orientation do pose_in
+    pose_out.pose.orientation.x = pose_in.pose.orientation.x
+    pose_out.pose.orientation.y = pose_in.pose.orientation.y
+    pose_out.pose.orientation.z = pose_in.pose.orientation.z
+    pose_out.pose.orientation.w = pose_in.pose.orientation.w
+
+    standing_flag = True
+
+    # #bag handover
+    # pose_out.pose.orientation.x = 0.762 
+    # pose_out.pose.orientation.y = -0.011
+    # pose_out.pose.orientation.z = -0.575
+    # pose_out.pose.orientation.w = -0.33
+
+
+    return pose_out, standing_flag   #, sampling_parameters
 
 
 def modify_pose_rotation(pose, offset=0.0, reference_axis='z', rotation_range=None):

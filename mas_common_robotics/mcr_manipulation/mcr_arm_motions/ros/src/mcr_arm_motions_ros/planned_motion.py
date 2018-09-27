@@ -34,7 +34,7 @@ class PlannedMotion(object):
         self.event = None
         self.target_configuration = None
 
-        # MoveIt! interface
+        # MovefIt! interface
         move_group = rospy.get_param('~move_group', None)
         assert move_group is not None, "Move group must be specified."
 
@@ -52,7 +52,7 @@ class PlannedMotion(object):
         self.arm = moveit_commander.MoveGroupCommander(arm)
 
         # Whether MoveIt! should wait for the arm to be stopped.
-        self.wait_for_motion = rospy.get_param('~wait_for_motion', True)
+        self.wait_for_motion = rospy.get_param('~wait_for_motion', True)   #mudei isto para False
 
         # Node cycle rate (in hz)
         self.loop_rate = rospy.Rate(rospy.get_param('~loop_rate', 10))
@@ -61,18 +61,21 @@ class PlannedMotion(object):
         self.event_out = rospy.Publisher("~event_out", std_msgs.msg.String, queue_size=1)
 
         # Subscribers
-        rospy.Subscriber("~event_in", std_msgs.msg.String, self.event_in_cb)
+        rospy.Subscriber("/mcr_arm_motions/move_arm_planned_motion/event_in", std_msgs.msg.String, self.event_in_cb)
         rospy.Subscriber(
-            "~target_configuration", brics_actuator.msg.JointPositions,
+            "/mir_manipulation/pregrasp_planner_pipeline/configuration_out", brics_actuator.msg.JointPositions,
             self.target_configuration_cb
-        )
+        )    # mudei aqui o topic que ele esta a subscrever
 
     def target_configuration_cb(self, msg):
         """
         Obtains the joint configuration where the arm will be moved.
 
         """
+        rospy.sleep(4)                      #acrescentei este sleep
         self.target_configuration = msg
+        print "vai sair a configggggggg"
+        print self.target_configuration
 
     def event_in_cb(self, msg):
         """
@@ -80,6 +83,8 @@ class PlannedMotion(object):
 
         """
         self.event = msg.data
+        print "vai sair eventtttt"
+        print self.event
 
     def start(self):
         """
@@ -95,8 +100,10 @@ class PlannedMotion(object):
                 state = self.init_state()
             elif state == 'IDLE':
                 state = self.idle_state()
+                print "esta em idle"
             elif state == 'RUNNING':
                 state = self.running_state()
+                print "esta em running"
 
             rospy.logdebug("State: {0}".format(state))
             self.loop_rate.sleep()
@@ -128,6 +135,7 @@ class PlannedMotion(object):
             self.event_out.publish('e_stopped')
             return 'INIT'
         elif self.target_configuration:
+            print "vai pa runningggg"
             return 'RUNNING'
         else:
             return 'IDLE'
@@ -146,12 +154,15 @@ class PlannedMotion(object):
             self.event_out.publish('e_stopped')
             return 'INIT'
         else:
+            print "esta no else correctoooooooooooo"
             move_status = self.move_arm(self.target_configuration, self.wait_for_motion)
+            
 
             if move_status:
                 self.event_out.publish('e_success')
             else:
                 self.event_out.publish('e_failure')
+                print "FALHOU"
 
         self.reset_component_data()
         return 'INIT'

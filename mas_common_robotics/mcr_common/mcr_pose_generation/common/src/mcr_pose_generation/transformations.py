@@ -22,7 +22,7 @@ def generate_grasp_matrix(
     offset and a wrist roll.
 
     :param object_pose: The 4x4 transformation matrix describing the
-    object's pose. The following assumptions are made:
+    object's pose. The following assumptions are made:         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         - X axis is along the object's longest axis.
         - If the object is standing (e.g. vertical orientation):
             - Y axis is along the object's second longest axis.
