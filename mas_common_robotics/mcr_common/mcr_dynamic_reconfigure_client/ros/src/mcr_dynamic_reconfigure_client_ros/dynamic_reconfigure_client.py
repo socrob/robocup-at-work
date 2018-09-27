@@ -156,9 +156,6 @@ class DynamicReconfigureClient(object):
     def set_node_parameters(self, node_name, params):
         """
         create dynamic reconfigure client and set params for a single node
-
-        API
-        
         """
 
         try:

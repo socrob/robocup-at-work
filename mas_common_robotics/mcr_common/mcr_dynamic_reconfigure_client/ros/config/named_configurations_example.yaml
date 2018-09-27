@@ -40,13 +40,3 @@ close_range_camera:
 far_range_camera:
     /realsense_node:
       motion_range_trade_off: 0
-bag_handover:
-    /mir_manipulation/pregrasp_planner_pipeline/pregrasp_planner:
-      min_azimuth: -5.0
-      max_azimuth: 20.0
-      min_zenith: -5.0
-      max_zenith: 5.0
-      min_roll: -3.0
-      max_roll: 3.0
-      min_distance_to_object: 0.01
-      max_distance_to_object: 0.3

@@ -227,11 +227,9 @@ class PoseGenerator:
 
         # Sort azimuth and wrist rolls samples to start from the 'middle', which in our case is usually the best configuration for picking
         azimuths = utils.sort_from_middle(azimuths)
-        wrist_rolls = utils.sort_from_middle(wrist_rolls)
+	wrist_rolls = utils.sort_from_middle(wrist_rolls)
 
-    ############################################################
-
-        transforms = [
+	transforms = [
             transformations.generate_grasp_matrix(
                 object_matrix, self.gripper_config_matrix, height_offset,
                 zenith, azimuth, wrist_roll, radial

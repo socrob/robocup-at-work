@@ -57,7 +57,6 @@ import math
 import rospy
 import std_msgs.msg
 import geometry_msgs.msg
-import tf
 import mcr_manipulation_msgs.msg
 import mir_pregrasp_planning_ros.simple_pregrasp_planner_utils as pregrasp_planner_utils
 from dynamic_reconfigure.server import Server
@@ -75,13 +74,6 @@ class PregraspPlanner(object):
         self.event = None
         self.pose_in = None
 
-        self.vel_base = geometry_msgs.msg.Twist()
-        self.listener2 = tf.TransformListener() #creating tf.TransformListener object
-        self.goalpose_msg = geometry_msgs.msg.PoseStamped() #to store goal pose
-        self.goalpose_msg_odom = geometry_msgs.msg.PoseStamped()
-        self.base_to_odom = None
-        self.wait_for_transform = 0.1
-
         # Tolerance to decide whether an object should be re-oriented,
         # based on its height (in meters).
         self.height_tolerance = rospy.get_param('~height_tolerance', 0.15)
@@ -97,15 +89,12 @@ class PregraspPlanner(object):
                 "Rotation range must a list of two elements."
 
         # Closest distance the gripper should be to the object (in meters).
-        self.min_distance_to_object = rospy.get_param('~min_distance_to_object', 0.01)
+        self.min_distance_to_object = rospy.get_param('~min_distance_to_object', 0.0)
         # Farthest distance the gripper should be to the object (in meters).
-        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.4)
+        self.max_distance_to_object = rospy.get_param('~max_distance_to_object', 0.0)
 
         # Sampling parameters (in degrees) from dynamic reconfiguration server.
         dynamic_reconfig_srv = Server(AngleConfig, self.dynamic_reconfig_cb)
-    
-
-
 
         # Angular tolerance to check if an object is standing up (in degrees).
         self.angular_tolerance = rospy.get_param('~angular_tolerance', 2.0)
@@ -125,15 +114,9 @@ class PregraspPlanner(object):
         rospy.Subscriber('~event_in', std_msgs.msg.String, self.event_in_cb)
         rospy.Subscriber('~pose_in', geometry_msgs.msg.PoseStamped, self.pose_in_cb)
 
-        self.pub_base_vel_twist = rospy.Publisher('/cmd_vel', geometry_msgs.msg.Twist, queue_size=1)
-
-        self.listener2 = tf.TransformListener() #creating tf.TransformListener object
-
-
     def dynamic_reconfig_cb(self, config, level):
         rospy.loginfo("""Reconfigure Request: {min_azimuth}, {min_zenith},\
             {min_roll}, {max_azimuth}, {max_zenith}, {max_roll}""".format(**config))
-        
         self.min_azimuth = config.min_azimuth
         self.max_azimuth = config.max_azimuth
         self.min_zenith = config.min_zenith
@@ -228,14 +211,9 @@ class PregraspPlanner(object):
         Publishes the component's outputs.
 
         """
-
         modified_pose, object_is_upwards = pregrasp_planner_utils.modify_pose(
-            self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance)      
-        #aqui e preciso por mais um output e as distances como mais 2 inputs
-
-        # self.goalpose_received = True
-        # # print ("goal pose received:", self.goalpose_msg)
-        # return
+            self.pose_in, self.height_tolerance, angular_tolerance=self.angular_tolerance
+        )
 
         sampling_parameters = mcr_manipulation_msgs.msg.SphericalSamplerParameters()
         sampling_parameters.radial_distance.minimum = self.min_distance_to_object
@@ -247,116 +225,26 @@ class PregraspPlanner(object):
         sampling_parameters.yaw.minimum = math.radians(self.min_roll)
         sampling_parameters.yaw.maximum = math.radians(self.max_roll)
 
-
         if object_is_upwards:
-            print "publish immediatelyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+            print "publish inmediatlyyyyyyyyy"
             self.pose_out.publish(modified_pose)
-            print "modified pose:"
-            print modified_pose
             self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')
-    
-
         else:
-
-            print "deitadoooooooooooooooooooooooooooooooooooooooooooooooooooo"
-            # aqui o objecto esta deitado e por isso vai ser feito um topgrasp
-            # por isso pode ser preciso chegar a base mais proxima
-
-########### if distancia euclediana entre origem camera frame e grasp pose for maior que x
-########### entao chegar base mais proxima do objecto/mesa 
-###########     self.vel_base.linear.y = 1
-###########     rospy.sleep(3)  
-###########     self.vel_base.linear.y = 0
-                
-            print "publish immediatelyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-            self.pose_out.publish(modified_pose)
-            print "modified pose:"
-            print modified_pose
-            self.sampling_parameters.publish(sampling_parameters)
-            self.grasp_type.publish('side_grasp')
-            self.event_out.publish('e_success')
-
-
-
-
-
-
-            self.checkTF()
-
-            while abs(self.goalpose_msg.pose.position.x) > abs(self.goalpose_msg.pose.position.y):
-                print "no whileeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-                
-
-                self.vel_base.linear.x = 0
-                self.vel_base.linear.y = 0
-                self.vel_base.linear.z = 0.0
-                self.vel_base.angular.x = 0.0 
-                self.vel_base.angular.y = 0.0
-                self.vel_base.angular.z = -0.1  #so sera necessario rotacao em torno do Z (com uma velocidade arbitaria??? -0.1 parece bem)  
-                self.pub_base_vel_twist.publish(self.vel_base)
-
-                self.checkTF()
-
-                rospy.sleep(0.2)
-            
-
-            self.vel_base.linear.x = 0
-            self.vel_base.linear.y = 0
-            self.vel_base.linear.z = 0
-            self.vel_base.angular.x = 0.0 
-            self.vel_base.angular.y = 0.0
-            self.vel_base.angular.z = 0.0  
-            self.pub_base_vel_twist.publish(self.vel_base)
-
-            self.pose_out.publish(modified_pose)
-            self.sampling_parameters.publish(sampling_parameters)
-            self.grasp_type.publish('top_grasp')
-            self.event_out.publish('e_success')
-
-
             # the object is laying down, thus the rotation will be restricted
             # to only 180 degrees (e.g. top grasp)
-            # rotated_pose = pregrasp_planner_utils.modify_pose_rotation(
-            #     modified_pose, offset=self.rotation_offset,
-            #     reference_axis=self.reference_axis, rotation_range=self.rotation_range
-            # )
-            # if rotated_pose:
-            #     self.pose_out.publish(rotated_pose)
-            #     self.sampling_parameters.publish(sampling_parameters)
-            #     self.grasp_type.publish('top_grasp')
-            #     self.event_out.publish('e_success')
-            # else:
-            #     self.event_out.publish('e_failure')
-
-    def checkTF (self):
-
-        #This function get executed every time you receive a goal pose message
-        
-        # ensure that the code gets executed from beginning to end one time completely
-        # while not rospy.is_shutdown():
-        #     # try:
-        #     # refresh the timestamp of the received pose
-        self.pose_in.header.stamp = rospy.Time.now() - rospy.Duration(0.025) # hack
-        # wait for transform to become availble
-        self.listener2.waitForTransform("odom","base_link",self.pose_in.header.stamp,\
-                                        rospy.Duration(self.wait_for_transform))
-        base_to_odom = self.listener2.lookupTransform("odom","base_link",self.pose_in.header.stamp)
-        if base_to_odom:
-            self.base_to_odom = base_to_odom
-            self.goalpose_msg_odom = self.listener2.transformPose('odom',self.pose_in)
-            self.goalpose_msg = self.listener2.transformPose('base_link',self.pose_in) #goal pose in reference to base_link
-            
-            print self.goalpose_msg
-
-            self.ready_to_start = True
-
-            
-
-        #self.goalpose_received = True
-        # print ("goal pose received:", self.goalpose_msg)
-        #return
+            rotated_pose = pregrasp_planner_utils.modify_pose_rotation(
+                modified_pose, offset=self.rotation_offset,
+                reference_axis=self.reference_axis, rotation_range=self.rotation_range
+            )
+            if rotated_pose:
+                self.pose_out.publish(rotated_pose)
+                self.sampling_parameters.publish(sampling_parameters)
+                self.grasp_type.publish('top_grasp')
+                self.event_out.publish('e_success')
+            else:
+                self.event_out.publish('e_failure')
 
     def reset_component_data(self):
         """

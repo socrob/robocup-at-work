@@ -167,7 +167,7 @@ class PoseSelector(object):
             poses = self.group_goal_poses()
             solution = self.select_reachable_pose(poses, self.linear_offset)
             self.publish_result(solution)
-        
+
             self.event = None
             self.goal_pose = None
             self.goal_pose_array = None
@@ -220,7 +220,6 @@ class PoseSelector(object):
                 )
             if solution:
                 return pose, solution
-            
         print("No solution found")
         return None
 
@@ -237,7 +236,6 @@ class PoseSelector(object):
         if solution is not None:
             pose = solution[0]
             joint_values = solution[1]
-            print joint_values
             if pose.header.stamp:
                 configuration = pose_selector_utils.list_to_brics_joints(
                     joint_values, self.joint_uris, time_stamp=pose.header.stamp,
@@ -250,10 +248,6 @@ class PoseSelector(object):
             self.selected_pose.publish(pose)
             self.joint_configuration.publish(configuration)
             self.event_out.publish('e_success')
-            print "selected pose:"                                  #prints adicionados
-            print pose
-            # print "joints angles configuration:"
-            # print configuration
         else:
             self.event_out.publish('e_failure')
 

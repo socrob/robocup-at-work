@@ -77,7 +77,6 @@ class Kinematics:
         req.ik_request.robot_state.joint_state.name = self.joint_names
         req.ik_request.robot_state.joint_state.position = configuration
         req.ik_request.pose_stamped = goal_pose
-        req.ik_request.avoid_collisions = True  ############# adicionei isto
         try:
             resp = self.ik_client(req)
         except rospy.ServiceException, e:

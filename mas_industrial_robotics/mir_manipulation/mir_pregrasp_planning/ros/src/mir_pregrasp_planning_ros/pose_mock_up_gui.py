@@ -18,8 +18,8 @@ MAX_POSITION_X = 0.9        # in meters
 MIN_POSITION_X = -0.9        # in meters
 MAX_POSITION_Y = 0.9        # in meters
 MIN_POSITION_Y = -0.9       # in meters
-MAX_POSITION_Z = -0.3        # in meters    
-MIN_POSITION_Z = 0.9        # in meters      
+MAX_POSITION_Z = -0.3        # in meters
+MIN_POSITION_Z = 0.6        # in meters
 ANGULAR_RESOLUTION = 1      # in degrees
 MIN_ORIENTATION = 0         # in degrees
 MAX_ORIENTATION = 359       # in degrees
@@ -50,22 +50,21 @@ def create_window():
     # pose's position
     linear_scale_x = Tkinter.Scale(
         master, command=position_x, from_=MIN_POSITION_X, to=MAX_POSITION_X,
-        resolution=LINEAR_RESOLUTION, label="Position X")
-    linear_scale_x.set(-0.180)                # estes valores pus para bag handover testing
+        resolution=LINEAR_RESOLUTION, label="Position X"
+    )
     linear_scale_x.grid(row=0, column=0)
 
     linear_scale_y = Tkinter.Scale(
         master, command=position_y, from_=MIN_POSITION_Y, to=MAX_POSITION_Y,
-        resolution=LINEAR_RESOLUTION, label="Position Y")
-    linear_scale_y.set(-0.09)
+        resolution=LINEAR_RESOLUTION, label="Position Y"
+    )
     linear_scale_y.grid(row=0, column=1)
 
     linear_scale_z = Tkinter.Scale(
         master, command=position_z, from_=MIN_POSITION_Z, to=MAX_POSITION_Z,
-        resolution=LINEAR_RESOLUTION, label="Position Z")
-    linear_scale_z.set(0.685)
+        resolution=LINEAR_RESOLUTION, label="Position Z"
+    )
     linear_scale_z.grid(row=0, column=2)
-
 
     # pose's orientation
     roll = Tkinter.Scale(
@@ -172,7 +171,7 @@ def publish_pose():
     loop_rate = rospy.Rate(rospy.get_param('~loop_rate', 10))
 
     # the transparency of the object to be visualized
-    reference_frame = rospy.get_param('~reference_frame', 'odom')
+    reference_frame = rospy.get_param('~reference_frame', 'base_link')
 
     # the transparency of the object to be visualized
     transparency = rospy.get_param('~transparency', 0.5)
