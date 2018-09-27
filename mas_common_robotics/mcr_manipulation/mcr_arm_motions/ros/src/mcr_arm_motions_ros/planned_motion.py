@@ -162,6 +162,7 @@ class PlannedMotion(object):
                 self.event_out.publish('e_success')
             else:
                 self.event_out.publish('e_failure')
+                print "FALHOU"
 
         self.reset_component_data()
         return 'INIT'

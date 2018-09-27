@@ -256,12 +256,33 @@ class PregraspPlanner(object):
             self.sampling_parameters.publish(sampling_parameters)
             self.grasp_type.publish('side_grasp')
             self.event_out.publish('e_success')
+    
+
         else:
 
             print "deitadoooooooooooooooooooooooooooooooooooooooooooooooooooo"
             # aqui o objecto esta deitado e por isso vai ser feito um topgrasp
-            # e por isso e preciso rodar a base para o objecto ficar ligeiramente de lado
-            
+            # por isso pode ser preciso chegar a base mais proxima
+
+########### if distancia euclediana entre origem camera frame e grasp pose for maior que x
+########### entao chegar base mais proxima do objecto/mesa 
+###########     self.vel_base.linear.y = 1
+###########     rospy.sleep(3)  
+###########     self.vel_base.linear.y = 0
+                
+            print "publish immediatelyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+            self.pose_out.publish(modified_pose)
+            print "modified pose:"
+            print modified_pose
+            self.sampling_parameters.publish(sampling_parameters)
+            self.grasp_type.publish('side_grasp')
+            self.event_out.publish('e_success')
+
+
+
+
+
+
             self.checkTF()
 
             while abs(self.goalpose_msg.pose.position.x) > abs(self.goalpose_msg.pose.position.y):

@@ -50,7 +50,7 @@ def modify_pose(pose_in, height_threshold,
     """
 
     #standing = False
-    pose_out = copy.deepcopy(pose_in)
+    pose_out = copy.deepcopy(pose_in) #deepcopy copia tudo de uma instance e como esta a usar programacao por objectos
 
     # Checking if the orientation is 'standing':
     # # if the pose's X axis of the pose is pointing upwards,   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
