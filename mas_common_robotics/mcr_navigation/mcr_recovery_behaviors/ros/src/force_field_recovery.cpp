@@ -334,7 +334,7 @@ bool ForceFieldRecovery::checkStoppingConditions(Eigen::Vector3f &force_field,
         return true;
     }
     // C. recovery behavior timeout
-    else if (ros::Duration(ros::Time::now() - start_time).toSec() > timeout_)
+    else if ((ros::Time::now().toSec() - start_time.toSec()) > timeout_)
     {
         // timeout, recovery behavior has been executed for timeout seconds and still no success, then abort
         ROS_WARN("Force field recovery behavior time out exceeded");
