@@ -199,7 +199,7 @@ bool interpolation_planner_interface::InterpolationPlannerContext::generateTraje
     }
 
     ROS_INFO("Total trajectory time: %f", (planned_trajectory_time_));
-    ROS_INFO("Interpolated trajectory contains %d points.", (joint_traj_.points.size()));
+    ROS_INFO("Interpolated trajectory contains %lu points.", (joint_traj_.points.size()));
     return true;
 }
 
