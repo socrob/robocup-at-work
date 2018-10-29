@@ -1,8 +1,0 @@
-#goal definition
-float32 distance
----
-#result definition
-bool succeed
----
-#feedback
-int32 result

@@ -1,7 +1,6 @@
 #!/bin/bash
 ./mas_industrial_robotics/repository.debs
 ./mas_common_robotics/repository.debs
-./mas_third_party_software/repository.debs
 
 ### install further repositories if repository.rosinstall file exists
 if [ -f repository.rosinstall ]; then

@@ -1,3 +1,0 @@
-analyzers:
-  mcr_diag:
-    type: mcr_node_analyzer
