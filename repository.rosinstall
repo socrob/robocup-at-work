@@ -1,4 +1,4 @@
 - git:
-    local-name: brics_actuator
+    local-name: ../brics_actuator
     uri: https://github.com/socrob/brics_actuator.git
     version: master

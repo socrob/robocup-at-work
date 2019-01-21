@@ -1,0 +1,6 @@
+#ros install stuff
+setup.bash
+setup.sh
+setup.zsh
+.rosinstall
+.rosinstall.bak
