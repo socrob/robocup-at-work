@@ -6,8 +6,7 @@ else
 fi
 
 # your ROS distribution
-DISTRO=kinetic
-
+DISTRO=melodic
 # create list of packages to install
 packagelist=(
   liblog4cpp5-dev
